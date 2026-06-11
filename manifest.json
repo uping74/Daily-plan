@@ -4,8 +4,8 @@
   "description": "매일 루틴과 할 일을 관리하는 하루 플래너",
   "start_url": "./index.html",
   "display": "standalone",
-  "background_color": "#F7F5F0",
-  "theme_color": "#1A1814",
+  "background_color": "#F5F5F7",
+  "theme_color": "#1C1C1E",
   "orientation": "portrait",
   "lang": "ko",
   "icons": [

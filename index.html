@@ -7,1354 +7,1397 @@
 <meta name="apple-mobile-web-app-capable" content="yes"/>
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
 <meta name="apple-mobile-web-app-title" content="하루 플래너"/>
-<meta name="theme-color" content="#1A1814" media="(prefers-color-scheme: dark)"/>
-<meta name="theme-color" content="#F7F5F0" media="(prefers-color-scheme: light)"/>
+<meta name="theme-color" content="#1C1C1E" media="(prefers-color-scheme: dark)"/>
+<meta name="theme-color" content="#F2F2F7" media="(prefers-color-scheme: light)"/>
 <title>하루 플래너</title>
 <link rel="manifest" href="manifest.json"/>
 <link rel="apple-touch-icon" href="icons/icon-192.png"/>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600&display=swap" rel="stylesheet"/>
 <style>
-/* ════════════════════════════════
-   TOKENS
-════════════════════════════════ */
+/* ── iOS/macOS Design Tokens ── */
 :root {
-  --bg:          #F7F5F0;
-  --surface:     #FFFFFF;
-  --border:      #E4E0D8;
-  --text:        #1A1814;
-  --muted:       #8C8880;
-  --accent:      #2D5016;
-  --accent-lt:   #EAF3DE;
-  --accent-mid:  #639922;
-  --green:       #1D9E75;
-  --green-lt:    #E1F5EE;
-  --purple:      #534AB7;
-  --purple-lt:   #EEEDFE;
-  --amber:       #BA7517;
-  --amber-lt:    #FAEEDA;
-  --red:         #E24B4A;
-  --tag:         #F1EFE8;
-  --mono:        'DM Mono', monospace;
-  --serif:       'Noto Serif KR', serif;
-  --nav-h:       64px;
-  --safe-b:      env(safe-area-inset-bottom, 0px);
-  --safe-t:      env(safe-area-inset-top, 0px);
-  --radius-sm:   8px;
-  --radius-md:   12px;
-  --radius-lg:   14px;
+  /* Backgrounds */
+  --bg-primary:     #F2F2F7;
+  --bg-secondary:   #FFFFFF;
+  --bg-tertiary:    #E5E5EA;
+  --bg-grouped:     #F2F2F7;
+  --bg-inset:       #E5E5EA;
+
+  /* Labels */
+  --label:          #000000;
+  --label-2:        rgba(60,60,67,0.6);
+  --label-3:        rgba(60,60,67,0.3);
+  --label-4:        rgba(60,60,67,0.18);
+
+  /* Separators */
+  --sep:            rgba(60,60,67,0.12);
+  --sep-opaque:     #C6C6C8;
+
+  /* System colors */
+  --blue:           #007AFF;
+  --green:          #34C759;
+  --indigo:         #5856D6;
+  --orange:         #FF9500;
+  --red:            #FF3B30;
+  --teal:           #30B0C7;
+  --purple:         #AF52DE;
+  --gray:           #8E8E93;
+  --gray-2:         #AEAEB2;
+  --gray-3:         #C7C7CC;
+  --gray-4:         #D1D1D6;
+  --gray-5:         #E5E5EA;
+  --gray-6:         #F2F2F7;
+
+  /* Fill colors */
+  --fill-1:         rgba(120,120,128,0.2);
+  --fill-2:         rgba(120,120,128,0.16);
+  --fill-3:         rgba(118,118,128,0.12);
+  --fill-4:         rgba(116,116,128,0.08);
+
+  /* Typography */
+  --font:           'Noto Sans KR', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
+
+  /* Spacing */
+  --safe-t: env(safe-area-inset-top, 0px);
+  --safe-b: env(safe-area-inset-bottom, 0px);
+  --nav-h: 83px;
+
+  /* Corner radius */
+  --r-sm:  8px;
+  --r-md:  10px;
+  --r-lg:  16px;
+  --r-xl:  20px;
 }
+
 @media (prefers-color-scheme: dark) {
   :root {
-    --bg:        #141210;
-    --surface:   #1E1C18;
-    --border:    #2E2C28;
-    --text:      #F0EDE6;
-    --muted:     #6B6860;
-    --accent:    #97C459;
-    --accent-lt: #17340A;
-    --green-lt:  #0D3326;
-    --purple-lt: #1A1840;
-    --amber-lt:  #2A1E06;
-    --tag:       #252320;
+    --bg-primary:   #000000;
+    --bg-secondary: #1C1C1E;
+    --bg-tertiary:  #2C2C2E;
+    --bg-grouped:   #000000;
+    --bg-inset:     #2C2C2E;
+
+    --label:        #FFFFFF;
+    --label-2:      rgba(235,235,245,0.6);
+    --label-3:      rgba(235,235,245,0.3);
+    --label-4:      rgba(235,235,245,0.18);
+
+    --sep:          rgba(84,84,88,0.65);
+    --sep-opaque:   #38383A;
+
+    --gray:         #8E8E93;
+    --gray-2:       #636366;
+    --gray-3:       #48484A;
+    --gray-4:       #3A3A3C;
+    --gray-5:       #2C2C2E;
+    --gray-6:       #1C1C1E;
+
+    --fill-1:       rgba(120,120,128,0.36);
+    --fill-2:       rgba(120,120,128,0.32);
+    --fill-3:       rgba(118,118,128,0.24);
+    --fill-4:       rgba(116,116,128,0.18);
   }
 }
 
-/* ════════════════════════════════
-   RESET & BASE
-════════════════════════════════ */
-*, *::before, *::after {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-  -webkit-tap-highlight-color: transparent;
-}
-html { font-size: 15px; height: 100%; }
+/* ── Reset ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+html { height: 100%; font-size: 16px; -webkit-text-size-adjust: 100%; }
 body {
-  background: var(--bg);
-  color: var(--text);
-  font-family: var(--serif);
+  font-family: var(--font);
+  background: var(--bg-grouped);
+  color: var(--label);
   height: 100%;
   overflow: hidden;
   display: flex;
   flex-direction: column;
+  -webkit-font-smoothing: antialiased;
 }
 
-/* ════════════════════════════════
-   LAYOUT SHELL
-════════════════════════════════ */
-.safe-top  { height: var(--safe-t); background: var(--bg); flex-shrink: 0; }
+/* ── Safe area spacer ── */
+.safe-top { height: var(--safe-t); background: var(--bg-secondary); flex-shrink: 0; }
 
-.top-bar {
+/* ────────────────────────────────
+   NAVIGATION BAR (iOS style)
+──────────────────────────────── */
+.nav-bar {
+  background: rgba(242,242,247,0.85);
+  backdrop-filter: saturate(180%) blur(20px);
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+  border-bottom: 0.5px solid var(--sep-opaque);
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 8px;
-  padding: 12px 14px 10px;
-  background: var(--bg);
-  border-bottom: 1px solid var(--border);
+  padding: 8px 16px 10px;
   flex-shrink: 0;
+  position: relative;
+  z-index: 10;
 }
-.top-bar-center { flex: 1; text-align: center; min-width: 0; }
-.app-name {
-  font-size: 10px;
-  letter-spacing: .14em;
-  color: var(--muted);
-  font-family: var(--mono);
-  text-transform: uppercase;
+@media (prefers-color-scheme: dark) {
+  .nav-bar { background: rgba(28,28,30,0.85); }
 }
-.date-heading {
-  font-size: 1.15rem;
-  font-weight: 500;
-  letter-spacing: -.02em;
-  margin-top: 2px;
+.nav-bar-title {
+  position: absolute;
+  left: 50%; transform: translateX(-50%);
+  text-align: center;
+  pointer-events: none;
+}
+.nav-bar-title .nav-title-main {
+  font-size: 17px;
+  font-weight: 600;
+  letter-spacing: -0.4px;
   white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
 }
-.date-sub-row {
+.nav-bar-title .nav-title-sub {
   font-size: 11px;
-  color: var(--muted);
-  font-family: var(--mono);
-  margin-top: 2px;
+  color: var(--label-2);
+  font-weight: 400;
+  letter-spacing: 0;
+  margin-top: 0px;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 5px;
+  gap: 4px;
 }
-
-/* Sync status dot */
-.sync-dot {
-  display: inline-block;
-  width: 6px; height: 6px;
-  border-radius: 50%;
-  flex-shrink: 0;
-  transition: background .3s;
-}
-.sync-dot.off     { background: var(--border); }
-.sync-dot.ok      { background: var(--green); }
-.sync-dot.syncing { background: var(--amber); animation: blink 1s infinite; }
-.sync-dot.err     { background: var(--red); }
-@keyframes blink { 0%,100%{opacity:1} 50%{opacity:.25} }
-
-.nav-arrow {
-  width: 38px; height: 38px;
-  border: 1px solid var(--border);
-  background: var(--surface);
-  border-radius: var(--radius-sm);
+.nav-btn-icon {
+  width: 36px; height: 36px;
+  border: none; background: none;
+  color: var(--blue);
+  font-size: 22px;
+  font-weight: 300;
   display: flex; align-items: center; justify-content: center;
-  font-size: 20px;
-  color: var(--text);
+  border-radius: 50%;
   cursor: pointer;
-  flex-shrink: 0;
+  transition: background 0.15s;
   -webkit-user-select: none;
   user-select: none;
+  flex-shrink: 0;
 }
-.nav-arrow:active { background: var(--tag); }
+.nav-btn-icon:active { background: var(--fill-1); }
+.nav-today-btn {
+  font-size: 15px;
+  font-weight: 400;
+  color: var(--blue);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px 2px;
+  font-family: var(--font);
+  -webkit-user-select: none;
+}
+.nav-today-btn:active { opacity: 0.5; }
 
+/* Sync dot */
+.sync-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  display: inline-block;
+  flex-shrink: 0;
+}
+.sync-dot.off     { background: var(--gray-3); }
+.sync-dot.ok      { background: var(--green); }
+.sync-dot.syncing { background: var(--orange); animation: pulse 1s infinite; }
+.sync-dot.err     { background: var(--red); }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.2} }
+
+/* ────────────────────────────────
+   SCROLL AREA
+──────────────────────────────── */
 .scroll-area {
   flex: 1;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
-  overscroll-behavior: contain;
-  padding: 14px 14px calc(var(--nav-h) + var(--safe-b) + 16px);
+  overscroll-behavior-y: contain;
+  padding: 0 0 calc(var(--nav-h) + var(--safe-b) + 8px);
 }
 
-/* ════════════════════════════════
-   BOTTOM NAV
-════════════════════════════════ */
-.bottom-nav {
-  position: fixed;
-  bottom: 0; left: 0; right: 0;
-  height: calc(var(--nav-h) + var(--safe-b));
-  padding-bottom: var(--safe-b);
-  background: var(--surface);
-  border-top: 1px solid var(--border);
-  display: flex;
-  z-index: 200;
+/* ────────────────────────────────
+   SECTION GROUPED (iOS table style)
+──────────────────────────────── */
+.section-group {
+  margin: 20px 16px 0;
 }
-.nav-tab {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 3px;
-  background: none;
-  border: none;
-  color: var(--muted);
-  font-family: var(--mono);
-  font-size: 9px;
-  letter-spacing: .06em;
+.section-header {
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--label-2);
   text-transform: uppercase;
-  cursor: pointer;
-  padding: 8px 4px;
-  -webkit-user-select: none;
-  user-select: none;
-  transition: color .15s;
+  letter-spacing: 0.06em;
+  padding: 0 4px 6px;
 }
-.nav-tab:active { opacity: .6; }
-.nav-tab.active { color: var(--text); }
-.nav-tab-icon {
-  font-size: 22px;
-  line-height: 1;
-  transition: transform .15s;
-}
-.nav-tab.active .nav-tab-icon { transform: scale(1.12); }
-.nav-tab-dot {
-  width: 4px; height: 4px;
-  border-radius: 50%;
-  background: var(--purple);
-  margin-top: -1px;
-  opacity: 0;
-  transition: opacity .2s;
-}
-.nav-tab.active .nav-tab-dot { opacity: 1; }
-
-/* ════════════════════════════════
-   UTILITY COMPONENTS
-════════════════════════════════ */
-/* Alert / info bar */
-.alert-bar {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 9px 12px;
-  border: 1px solid var(--border);
-  border-radius: var(--radius-md);
-  margin-bottom: 12px;
-  font-size: 11px;
-  font-family: var(--mono);
+.section-footer {
+  font-size: 13px;
+  color: var(--label-2);
+  padding: 8px 4px 0;
   line-height: 1.5;
 }
-.alert-bar.amber { background: var(--amber-lt); }
-.alert-bar.green { background: var(--green-lt); }
-.alert-bar.hidden { display: none !important; }
-.alert-bar-actions { display: flex; gap: 6px; margin-left: auto; flex-shrink: 0; }
-
-/* Buttons */
-.btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: var(--radius-sm);
-  font-family: var(--mono);
-  font-size: 12px;
-  font-weight: 500;
-  cursor: pointer;
-  border: none;
-  transition: opacity .15s, background .15s;
-  white-space: nowrap;
-}
-.btn:active { opacity: .75; }
-.btn-primary { background: var(--purple); color: white; padding: 9px 16px; min-height: 40px; }
-.btn-secondary { background: var(--tag); color: var(--text); border: 1px solid var(--border); padding: 7px 12px; min-height: 36px; }
-.btn-add { background: var(--accent-lt); color: var(--accent); border: 1px solid var(--border); padding: 10px 14px; min-height: 44px; font-size: 13px; }
-.btn-add:active { background: var(--accent-mid); color: white; }
-.btn-ghost { background: none; border: none; color: var(--muted); font-size: 17px; padding: 4px 6px; cursor: pointer; }
-.btn-ghost:active { color: var(--red); }
-
-/* Section card */
-.card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  margin-bottom: 12px;
+.list-card {
+  background: var(--bg-secondary);
+  border-radius: var(--r-lg);
   overflow: hidden;
 }
-.card-header {
+.list-card + .list-card { margin-top: 8px; }
+
+/* ────────────────────────────────
+   STATS ROW
+──────────────────────────────── */
+.stats-row {
+  display: grid;
+  grid-template-columns: repeat(3,1fr);
+  gap: 10px;
+  margin: 20px 16px 0;
+}
+.stat-tile {
+  background: var(--bg-secondary);
+  border-radius: var(--r-lg);
+  padding: 14px 12px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.stat-value {
+  font-size: 26px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  line-height: 1;
+}
+.stat-label {
+  font-size: 12px;
+  color: var(--label-2);
+  font-weight: 400;
+}
+.stat-tile.blue   .stat-value { color: var(--blue); }
+.stat-tile.green  .stat-value { color: var(--green); }
+.stat-tile.indigo .stat-value { color: var(--indigo); }
+
+/* ────────────────────────────────
+   PROGRESS BAR
+──────────────────────────────── */
+.progress-section { margin: 16px 16px 0; }
+.progress-bar-track {
+  height: 6px;
+  background: var(--fill-3);
+  border-radius: 99px;
+  overflow: hidden;
+}
+.progress-bar-fill {
+  height: 100%;
+  border-radius: 99px;
+  transition: width 0.4s cubic-bezier(.4,0,.2,1);
+  background: linear-gradient(90deg, var(--blue), var(--indigo));
+}
+.progress-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  color: var(--label-2);
+  margin-bottom: 6px;
+}
+
+/* ────────────────────────────────
+   LIST ROWS
+──────────────────────────────── */
+.row {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  padding: 12px 14px 10px;
-  border-bottom: 1px solid var(--border);
+  gap: 12px;
+  padding: 12px 16px;
+  min-height: 52px;
+  position: relative;
 }
-.card-title {
-  font-size: 11px;
-  font-family: var(--mono);
-  text-transform: uppercase;
-  letter-spacing: .1em;
-  color: var(--muted);
+.row + .row::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 56px; right: 0;
+  height: 0.5px;
+  background: var(--sep);
+}
+.row:active { background: var(--fill-4); }
+
+/* SF-style checkmark circle */
+.row-check {
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  border: 2px solid var(--gray-3);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(.4,0,.2,1);
+  font-size: 14px;
+  color: transparent;
+  -webkit-user-select: none;
+}
+.row-check.done-blue   { background: var(--blue);   border-color: var(--blue);   color: white; }
+.row-check.done-green  { background: var(--green);  border-color: var(--green);  color: white; }
+
+.row-body { flex: 1; min-width: 0; }
+.row-title {
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.35;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: color 0.18s;
+}
+.row-title.done {
+  text-decoration: line-through;
+  color: var(--label-3);
+}
+.row-sub {
+  font-size: 13px;
+  color: var(--label-2);
+  margin-top: 1px;
+}
+.row-trailing {
+  font-size: 13px;
+  color: var(--label-2);
+  flex-shrink: 0;
   display: flex;
   align-items: center;
   gap: 6px;
 }
-.card-badge { font-size: 11px; font-family: var(--mono); color: var(--muted); }
 
-/* Thin progress bar under card header */
-.card-prog { height: 2px; background: var(--border); position: relative; overflow: hidden; }
-.card-prog-fill { position: absolute; left:0; top:0; height:100%; transition: width .35s; }
-.fill-purple { background: var(--purple); }
-.fill-green  { background: var(--green); }
-
-/* Color dots */
-.dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
-.dot-purple { background: var(--purple); }
-.dot-green  { background: var(--green); }
-
-/* ════════════════════════════════
-   PROGRESS STRIP
-════════════════════════════════ */
-.prog-strip {
-  display: flex;
-  gap: 3px;
-  margin-bottom: 14px;
+/* Delete button (iOS swipe-style visible button) */
+.btn-del {
+  background: none;
+  border: none;
+  color: var(--label-3);
+  cursor: pointer;
+  font-size: 20px;
+  width: 28px;
+  height: 28px;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 50%;
+  flex-shrink: 0;
+  transition: color 0.15s;
+  padding: 0;
 }
-.prog-seg {
-  height: 4px;
-  flex: 1;
-  border-radius: 99px;
-  background: var(--border);
-  transition: background .3s;
-}
-.prog-seg.s-purple { background: var(--purple); }
-.prog-seg.s-green  { background: var(--green); }
+.btn-del:active { color: var(--red); background: var(--fill-1); }
 
-/* ════════════════════════════════
-   STATS ROW
-════════════════════════════════ */
-.stats-row {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 8px;
-  margin-bottom: 14px;
-}
-.stat-box {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-md);
-  padding: 11px 8px;
+/* Empty state */
+.empty-row {
+  padding: 18px 16px;
+  font-size: 15px;
+  color: var(--label-3);
   text-align: center;
 }
-.stat-num { font-size: 1.2rem; font-weight: 500; font-family: var(--mono); }
-.stat-lbl { font-size: 9px; color: var(--muted); margin-top: 2px; font-family: var(--mono); letter-spacing: .06em; text-transform: uppercase; }
 
-/* ════════════════════════════════
-   LIST ITEMS (tasks / routines)
-════════════════════════════════ */
-.item-row {
+/* ────────────────────────────────
+   ADD ROW (inline input)
+──────────────────────────────── */
+.add-row {
   display: flex;
   align-items: center;
-  gap: 11px;
-  padding: 12px 14px;
-  border-bottom: 1px solid var(--border);
+  gap: 0;
+  padding: 0 16px 0 16px;
   min-height: 52px;
-  transition: background .1s;
+  border-top: 0.5px solid var(--sep);
 }
-.item-row:last-child { border-bottom: none; }
-.item-row:active { background: var(--bg); }
-
-.item-check {
-  width: 26px; height: 26px;
-  border-radius: 50%;
-  border: 1.5px solid var(--border);
-  display: flex; align-items: center; justify-content: center;
-  cursor: pointer;
-  flex-shrink: 0;
-  font-size: 13px;
-  color: transparent;
-  transition: all .18s;
-}
-.item-check.checked-green  { background: var(--green);  border-color: var(--green);  color: white; }
-.item-check.checked-purple { background: var(--purple); border-color: var(--purple); color: white; }
-
-.item-name {
+.add-row input {
   flex: 1;
-  font-size: 14px;
-  line-height: 1.45;
-  cursor: pointer;
-  transition: color .18s;
-  word-break: keep-all;
-}
-.item-name.struck { text-decoration: line-through; color: var(--muted); }
-
-.item-time {
-  font-size: 11px;
-  color: var(--muted);
-  font-family: var(--mono);
-  flex-shrink: 0;
-}
-
-.empty-msg {
-  padding: 16px 14px;
-  font-size: 12px;
-  color: var(--muted);
-  font-family: var(--mono);
-}
-
-/* ════════════════════════════════
-   ADD FORM
-════════════════════════════════ */
-.add-area { padding: 10px 14px 14px; }
-.add-form { display: flex; gap: 6px; }
-.add-form input {
-  flex: 1;
-  background: var(--bg);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
-  padding: 10px 12px;
-  font-size: 14px;
-  color: var(--text);
-  font-family: var(--serif);
+  background: none;
+  border: none;
   outline: none;
+  font-size: 16px;
+  color: var(--label);
+  font-family: var(--font);
+  padding: 12px 0;
   -webkit-appearance: none;
-  min-height: 44px;
 }
-.add-form input:focus { border-color: var(--muted); }
-.add-form .time-field {
-  width: 78px !important;
-  flex: none !important;
-  font-family: var(--mono) !important;
-  font-size: 12px !important;
+.add-row input::placeholder { color: var(--label-3); }
+.add-row .time-inp {
+  width: 70px;
+  flex: none;
+  font-size: 14px;
+  color: var(--label-2);
+  text-align: right;
+  padding: 12px 0 12px 8px;
+  border-left: 0.5px solid var(--sep);
+  margin-left: 8px;
 }
+.add-row .btn-add-inline {
+  background: none; border: none;
+  color: var(--blue);
+  font-size: 15px;
+  font-weight: 600;
+  font-family: var(--font);
+  cursor: pointer;
+  padding: 12px 0 12px 12px;
+  white-space: nowrap;
+  -webkit-user-select: none;
+}
+.add-row .btn-add-inline:active { opacity: 0.5; }
 
-/* ════════════════════════════════
+/* ────────────────────────────────
    ROUTINE EDIT (drag-and-drop)
-════════════════════════════════ */
-.routine-item {
+──────────────────────────────── */
+.routine-row {
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 12px 14px;
-  border-bottom: 1px solid var(--border);
+  padding: 12px 16px;
   min-height: 52px;
+  position: relative;
   user-select: none;
   -webkit-user-select: none;
-  transition: background .1s, opacity .15s;
+  transition: background 0.1s, opacity 0.15s;
 }
-.routine-item:last-child { border-bottom: none; }
-.routine-item.is-dragging { opacity: .35; background: var(--tag); }
-.routine-item.drag-target { background: var(--purple-lt); border-top: 2px solid var(--purple); }
+.routine-row + .routine-row::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 52px; right: 0;
+  height: 0.5px;
+  background: var(--sep);
+}
+.routine-row.is-dragging { opacity: 0.35; background: var(--fill-2); }
+.routine-row.drag-over   { background: rgba(0,122,255,0.08); border-top: 1.5px solid var(--blue); }
 
-.drag-handle {
-  font-size: 20px;
-  color: var(--muted);
+.drag-grip {
+  color: var(--gray-2);
+  font-size: 18px;
   cursor: grab;
   padding: 2px 4px;
   flex-shrink: 0;
   touch-action: none;
   line-height: 1;
 }
-.drag-handle:active { cursor: grabbing; }
-
-.order-badge {
-  font-size: 11px;
-  font-family: var(--mono);
-  color: var(--muted);
-  width: 18px;
+.drag-grip:active { cursor: grabbing; }
+.order-num {
+  font-size: 13px;
+  color: var(--label-3);
+  width: 16px;
   text-align: right;
   flex-shrink: 0;
 }
 .reorder-tip {
-  padding: 8px 14px 4px;
-  font-size: 11px;
-  font-family: var(--mono);
-  color: var(--muted);
-  letter-spacing: .04em;
-}
-
-/* ════════════════════════════════
-   LOG VIEW
-════════════════════════════════ */
-.log-card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  padding: 14px;
-  margin-bottom: 10px;
-}
-.log-card-header {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  margin-bottom: 10px;
-  padding-bottom: 8px;
-  border-bottom: 1px solid var(--border);
-}
-.log-date { font-size: 13px; font-family: var(--mono); }
-.log-pct  { font-size: 13px; font-family: var(--mono); font-weight: 500; }
-.log-item { display: flex; align-items: center; gap: 8px; padding: 4px 0; font-size: 13px; }
-.log-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
-.log-dot.done-r { background: var(--purple); }
-.log-dot.done-t { background: var(--green); }
-.log-dot.skipped { background: var(--border); }
-.log-name { line-height: 1.4; }
-.log-name.skipped { color: var(--muted); text-decoration: line-through; }
-
-/* ════════════════════════════════
-   SETUP SCREEN
-════════════════════════════════ */
-.setup-card {
-  background: var(--purple-lt);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  padding: 18px 16px;
-  margin-bottom: 14px;
-}
-.setup-heading {
-  font-size: 14px;
-  font-weight: 500;
-  font-family: var(--mono);
-  margin-bottom: 16px;
-}
-.setup-step {
+  padding: 10px 16px 6px;
   font-size: 12px;
-  font-family: var(--mono);
-  color: var(--muted);
-  line-height: 1.75;
-  margin-bottom: 12px;
-}
-.setup-step a { color: var(--purple); text-decoration: none; }
-.setup-step strong { color: var(--text); }
-.setup-field {
-  display: flex;
-  gap: 6px;
-  margin-top: 6px;
-}
-.setup-field input {
-  flex: 1;
-  background: var(--bg);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
-  padding: 9px 12px;
-  font-size: 13px;
-  color: var(--text);
-  font-family: var(--mono);
-  outline: none;
-  min-height: 42px;
-  -webkit-appearance: none;
-}
-.setup-field input:focus { border-color: var(--purple); }
-.setup-note {
-  font-size: 11px;
-  font-family: var(--mono);
-  color: var(--muted);
-  margin-top: 10px;
-  line-height: 1.65;
+  color: var(--label-3);
 }
 
-/* ════════════════════════════════
-   INSTALL BANNER
-════════════════════════════════ */
-.install-banner {
-  background: var(--accent-lt);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-md);
-  padding: 12px 14px;
-  margin-bottom: 14px;
+/* ────────────────────────────────
+   LOG VIEW
+──────────────────────────────── */
+.log-day-card {
+  background: var(--bg-secondary);
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  margin: 20px 16px 0;
+}
+.log-day-header {
   display: flex;
   align-items: center;
-  gap: 10px;
+  justify-content: space-between;
+  padding: 12px 16px 10px;
+  border-bottom: 0.5px solid var(--sep);
 }
-.install-text { font-size: 12px; font-family: var(--mono); flex: 1; line-height: 1.5; }
-.install-close { background: none; border: none; color: var(--muted); font-size: 18px; cursor: pointer; padding: 2px; flex-shrink: 0; }
+.log-day-title {
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: -0.2px;
+}
+.log-day-badge {
+  font-size: 13px;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 99px;
+}
+.log-day-badge.high   { background: rgba(52,199,89,.15);  color: var(--green); }
+.log-day-badge.mid    { background: rgba(255,149,0,.15);  color: var(--orange); }
+.log-day-badge.low    { background: rgba(142,142,147,.15); color: var(--gray); }
+.log-row {
+  display: flex; align-items: center; gap: 10px;
+  padding: 9px 16px;
+  font-size: 14px;
+  position: relative;
+}
+.log-row + .log-row::before {
+  content: ''; position: absolute; top: 0; left: 42px; right: 0;
+  height: 0.5px; background: var(--sep);
+}
+.log-icon { font-size: 14px; width: 20px; text-align: center; flex-shrink: 0; }
+.log-name { flex: 1; }
+.log-name.skipped { color: var(--label-3); text-decoration: line-through; }
+
+/* ────────────────────────────────
+   SETUP SCREEN
+──────────────────────────────── */
+.setup-hero {
+  text-align: center;
+  padding: 40px 24px 24px;
+}
+.setup-icon { font-size: 64px; margin-bottom: 16px; }
+.setup-title {
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  margin-bottom: 8px;
+}
+.setup-desc {
+  font-size: 15px;
+  color: var(--label-2);
+  line-height: 1.55;
+}
+.setup-steps {
+  margin: 8px 16px 0;
+  background: var(--bg-secondary);
+  border-radius: var(--r-lg);
+  overflow: hidden;
+}
+.setup-step-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 14px 16px;
+  position: relative;
+}
+.setup-step-row + .setup-step-row::before {
+  content: ''; position: absolute;
+  top: 0; left: 52px; right: 0;
+  height: 0.5px; background: var(--sep);
+}
+.step-num {
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  background: var(--blue);
+  color: white;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px;
+  font-weight: 600;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+.step-body { flex: 1; }
+.step-title { font-size: 15px; font-weight: 500; margin-bottom: 3px; }
+.step-desc  { font-size: 13px; color: var(--label-2); line-height: 1.5; }
+.step-desc a { color: var(--blue); text-decoration: none; }
+.step-desc strong { color: var(--label); font-weight: 500; }
+
+.token-field-wrap {
+  margin: 16px 16px 0;
+}
+.token-field-row {
+  background: var(--bg-secondary);
+  border-radius: var(--r-lg);
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  border: 1.5px solid transparent;
+  transition: border-color 0.2s;
+}
+.token-field-row:focus-within { border-color: var(--blue); }
+.token-field-row input {
+  flex: 1;
+  background: none;
+  border: none;
+  outline: none;
+  padding: 14px 16px;
+  font-size: 15px;
+  color: var(--label);
+  font-family: var(--font);
+  -webkit-appearance: none;
+}
+.token-field-row input::placeholder { color: var(--label-3); }
+.token-connect-btn {
+  background: var(--blue);
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  font-size: 15px;
+  font-weight: 600;
+  font-family: var(--font);
+  cursor: pointer;
+  border-radius: 10px;
+  margin: 6px 6px 6px 0;
+  transition: opacity 0.15s;
+}
+.token-connect-btn:active { opacity: 0.75; }
+.setup-note {
+  font-size: 13px;
+  color: var(--label-2);
+  line-height: 1.55;
+  margin: 10px 16px 0;
+  padding: 0 4px;
+}
+
+/* ────────────────────────────────
+   INLINE ALERTS
+──────────────────────────────── */
+.alert-strip {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 12px 16px 0;
+  padding: 10px 14px;
+  border-radius: var(--r-md);
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1.4;
+}
+.alert-strip.hidden { display: none !important; }
+.alert-strip.warn { background: rgba(255,149,0,.15); color: #915400; }
+.alert-strip.info { background: rgba(0,122,255,.1); color: var(--blue); }
+@media (prefers-color-scheme: dark) {
+  .alert-strip.warn { color: #FFB340; }
+  .alert-strip.info { color: #64AFFF; }
+}
+.alert-strip-actions { margin-left: auto; display: flex; gap: 6px; flex-shrink: 0; }
+.btn-text {
+  background: none; border: none;
+  color: var(--blue); font-size: 13px;
+  font-weight: 600; font-family: var(--font);
+  cursor: pointer; padding: 2px 4px;
+}
+.btn-text:active { opacity: 0.5; }
+.btn-text.red { color: var(--red); }
+
+/* ────────────────────────────────
+   BOTTOM TAB BAR (iOS)
+──────────────────────────────── */
+.tab-bar {
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  height: calc(49px + var(--safe-b));
+  padding-bottom: var(--safe-b);
+  background: rgba(242,242,247,0.85);
+  backdrop-filter: saturate(180%) blur(20px);
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+  border-top: 0.5px solid var(--sep-opaque);
+  display: flex;
+  z-index: 100;
+}
+@media (prefers-color-scheme: dark) {
+  .tab-bar { background: rgba(28,28,30,0.85); }
+}
+.tab-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 6px 4px;
+  color: var(--gray);
+  font-family: var(--font);
+  font-size: 10px;
+  font-weight: 400;
+  letter-spacing: 0.01em;
+  -webkit-user-select: none;
+  user-select: none;
+  transition: color 0.15s;
+}
+.tab-item:active { opacity: 0.6; }
+.tab-item.active { color: var(--blue); }
+.tab-icon { font-size: 23px; line-height: 1; transition: transform 0.15s; }
+.tab-item.active .tab-icon { transform: scale(1.05); }
+
+/* ────────────────────────────────
+   MISC UTILITIES
+──────────────────────────────── */
+.section-action-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  margin: 8px 16px 0;
+  padding: 13px;
+  background: var(--bg-secondary);
+  border-radius: var(--r-lg);
+  border: none;
+  color: var(--blue);
+  font-size: 15px;
+  font-family: var(--font);
+  font-weight: 400;
+  cursor: pointer;
+  width: calc(100% - 32px);
+  transition: background 0.15s;
+}
+.section-action-btn:active { background: var(--fill-2); }
+
+.token-reset-row {
+  display: flex;
+  gap: 10px;
+  margin: 16px 16px 0;
+}
+.token-reset-row button {
+  flex: 1;
+  padding: 13px;
+  background: var(--bg-secondary);
+  border-radius: var(--r-lg);
+  border: none;
+  font-size: 14px;
+  font-family: var(--font);
+  font-weight: 400;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.token-reset-row button:active { background: var(--fill-2); }
+.token-reset-row .btn-blue  { color: var(--blue); }
+.token-reset-row .btn-red   { color: var(--red); }
+
+/* Swipe hint */
+.swipe-hint {
+  text-align: center;
+  font-size: 12px;
+  color: var(--label-3);
+  padding: 16px 0 4px;
+}
+
+/* Today indicator in log */
+.today-badge {
+  font-size: 11px;
+  font-weight: 600;
+  background: var(--blue);
+  color: white;
+  border-radius: 99px;
+  padding: 1px 7px;
+  margin-left: 6px;
+  vertical-align: middle;
+}
 </style>
 </head>
 <body>
 
-<!-- Safe area spacer (notch) -->
 <div class="safe-top"></div>
 
-<!-- ── Top bar ── -->
-<header class="top-bar">
-  <button class="nav-arrow" onclick="changeDay(-1)" aria-label="이전 날">‹</button>
-  <div class="top-bar-center">
-    <div class="app-name">Daily Planner</div>
-    <div class="date-heading" id="el-date-heading">—</div>
-    <div class="date-sub-row">
-      <span id="el-date-sub">—</span>
-      <span class="sync-dot off" id="el-sync-dot" title="동기화 상태"></span>
-      <span id="el-sync-label" style="font-size:10px;font-family:var(--mono);color:var(--muted);"></span>
+<!-- ── Navigation Bar ── -->
+<header class="nav-bar">
+  <button class="nav-btn-icon" onclick="changeDay(-1)" aria-label="이전">‹</button>
+  <div class="nav-bar-title">
+    <div class="nav-title-main" id="el-nav-title">—</div>
+    <div class="nav-title-sub">
+      <span id="el-nav-sub">—</span>
+      <span class="sync-dot off" id="el-sync-dot"></span>
     </div>
   </div>
-  <button class="nav-arrow" onclick="changeDay(1)" aria-label="다음 날">›</button>
+  <button class="nav-btn-icon" onclick="changeDay(1)" aria-label="다음">›</button>
 </header>
 
-<!-- ── Scrollable content ── -->
+<!-- ── Main scroll area ── -->
 <main class="scroll-area" id="el-scroll">
 
-  <!-- Install prompt (shown when PWA installable) -->
-  <div class="install-banner hidden" id="el-install-banner">
-    <div class="install-text">📱 홈 화면에 추가하면 앱처럼 사용할 수 있어요</div>
-    <button class="btn btn-primary" style="font-size:11px;padding:6px 10px;min-height:32px;" onclick="installPWA()">추가</button>
-    <button class="install-close" onclick="dismissInstall()">✕</button>
-  </div>
-
-  <!-- Sync error bar -->
-  <div class="alert-bar amber hidden" id="el-sync-bar">
+  <!-- Sync error alert -->
+  <div class="alert-strip warn hidden" id="el-sync-bar">
     <span>⚠️</span>
     <span id="el-sync-msg" style="flex:1;">동기화 실패</span>
-    <div class="alert-bar-actions">
-      <button class="btn btn-secondary" style="font-size:11px;padding:5px 10px;" onclick="syncNow()">재시도</button>
+    <div class="alert-strip-actions">
+      <button class="btn-text" onclick="syncNow()">재시도</button>
     </div>
   </div>
 
   <!-- ════ SETUP VIEW ════ -->
   <div id="view-setup" style="display:none;">
-    <div class="setup-card">
-      <div class="setup-heading">🔗 동기화 설정 <span style="font-size:11px;color:var(--muted);">(최초 1회)</span></div>
+    <div class="setup-hero">
+      <div class="setup-icon">📋</div>
+      <div class="setup-title">하루 플래너</div>
+      <div class="setup-desc">GitHub 저장소에 데이터를 저장해<br>모든 기기에서 동일하게 사용하세요.</div>
+    </div>
 
-      <div class="setup-step">
-        <strong>1단계</strong> — GitHub 토큰 발급<br>
-        <a href="https://github.com/settings/tokens/new" target="_blank">github.com/settings/tokens/new</a> 접속<br>
-        → Note: <strong>daily-planner</strong><br>
-        → Expiration: <strong>No expiration</strong><br>
-        → Scopes: <strong>gist</strong> 체크 → Generate token
-      </div>
-
-      <div class="setup-step">
-        <strong>2단계</strong> — 발급된 토큰 붙여넣기
-      </div>
-      <div class="setup-field">
-        <input type="password" id="el-token-input" placeholder="ghp_xxxxxxxxxxxxxx" autocomplete="off"/>
-        <button class="btn btn-primary" onclick="saveToken()">연결</button>
-      </div>
-      <div class="setup-note">
-        🔒 토큰은 이 기기의 브라우저에만 저장됩니다.<br>
-        다른 기기에서도 같은 토큰을 입력하면 데이터가 자동으로 공유됩니다.
+    <div class="section-group">
+      <div class="section-header">설정 방법</div>
+      <div class="setup-steps">
+        <div class="setup-step-row">
+          <div class="step-num">1</div>
+          <div class="step-body">
+            <div class="step-title">GitHub Token 발급</div>
+            <div class="step-desc">
+              <a href="https://github.com/settings/tokens/new" target="_blank">github.com/settings/tokens/new</a> 접속<br>
+              Note: <strong>daily-planner</strong> · Expiration: <strong>No expiration</strong><br>
+              Scopes: <strong>repo</strong> 체크 → Generate token
+            </div>
+          </div>
+        </div>
+        <div class="setup-step-row">
+          <div class="step-num">2</div>
+          <div class="step-body">
+            <div class="step-title">저장소 정보 입력</div>
+            <div class="step-desc">uping74 / Daily-plan 저장소를 사용합니다.<br>발급한 토큰을 아래에 입력하세요.</div>
+          </div>
+        </div>
       </div>
     </div>
+
+    <div class="token-field-wrap" style="margin-top:20px;">
+      <div class="section-header" style="padding:0 4px 6px;font-size:13px;color:var(--label-2);text-transform:uppercase;letter-spacing:.06em;">GitHub Token</div>
+      <div class="token-field-row">
+        <input type="password" id="el-token-input" placeholder="ghp_xxxxxxxxxxxxxxxx" autocomplete="off"/>
+        <button class="token-connect-btn" onclick="saveToken()">연결</button>
+      </div>
+    </div>
+
+    <div class="setup-note">
+      🔒 토큰은 이 기기에만 저장됩니다. 다른 기기에서 동일한 토큰을 입력하면 자동으로 동기화됩니다.<br><br>
+      📁 데이터는 <strong>uping74/Daily-plan</strong> 저장소의 <strong>data/planner.json</strong> 파일에 저장됩니다.
+    </div>
+    <div style="height:32px;"></div>
   </div>
 
   <!-- ════ PLANNER VIEW ════ -->
   <div id="view-planner" style="display:none;">
 
-    <!-- Progress strip -->
-    <div class="prog-strip" id="el-strip"></div>
+    <!-- Progress -->
+    <div class="progress-section">
+      <div class="progress-label">
+        <span id="el-prog-label">오늘 달성률</span>
+        <span id="el-prog-pct" style="font-weight:600;">0%</span>
+      </div>
+      <div class="progress-bar-track">
+        <div class="progress-bar-fill" id="el-prog-fill" style="width:0%"></div>
+      </div>
+    </div>
 
     <!-- Stats -->
     <div class="stats-row">
-      <div class="stat-box">
-        <div class="stat-num" id="el-stat-r">—</div>
-        <div class="stat-lbl">루틴</div>
+      <div class="stat-tile blue">
+        <div class="stat-value" id="el-stat-r">0/0</div>
+        <div class="stat-label">루틴</div>
       </div>
-      <div class="stat-box">
-        <div class="stat-num" id="el-stat-t">—</div>
-        <div class="stat-lbl">할 일</div>
+      <div class="stat-tile green">
+        <div class="stat-value" id="el-stat-t">0/0</div>
+        <div class="stat-label">할 일</div>
       </div>
-      <div class="stat-box">
-        <div class="stat-num" id="el-stat-pct" style="color:var(--accent-mid);">—</div>
-        <div class="stat-lbl">달성률</div>
+      <div class="stat-tile indigo">
+        <div class="stat-value" id="el-stat-pct">0%</div>
+        <div class="stat-label">달성률</div>
       </div>
     </div>
 
     <!-- Routine section -->
-    <div class="card">
-      <div class="card-header">
-        <div class="card-title">
-          <div class="dot dot-purple"></div>
-          매일 루틴
-        </div>
-        <div class="card-badge" id="el-r-badge">0/0</div>
+    <div class="section-group">
+      <div class="section-header">매일 루틴</div>
+      <div class="list-card">
+        <div id="el-routine-list"></div>
       </div>
-      <div class="card-prog">
-        <div class="card-prog-fill fill-purple" id="el-r-prog" style="width:0%"></div>
-      </div>
-      <div id="el-routine-list"></div>
     </div>
 
     <!-- Task section -->
-    <div class="card">
-      <div class="card-header">
-        <div class="card-title">
-          <div class="dot dot-green"></div>
-          오늘 할 일
-        </div>
-        <div class="card-badge" id="el-t-badge">0/0</div>
-      </div>
-      <div class="card-prog">
-        <div class="card-prog-fill fill-green" id="el-t-prog" style="width:0%"></div>
-      </div>
-      <div id="el-task-list"></div>
-      <div class="add-area">
-        <div class="add-form">
-          <input type="text" id="el-new-task" placeholder="할 일 추가..." maxlength="60" inputmode="text"/>
-          <input type="text" id="el-new-task-time" class="time-field" placeholder="10:00" inputmode="numeric"/>
-          <button class="btn btn-add" onclick="addTask()">추가</button>
+    <div class="section-group">
+      <div class="section-header">오늘 할 일</div>
+      <div class="list-card">
+        <div id="el-task-list"></div>
+        <div class="add-row">
+          <input type="text" id="el-new-task" placeholder="할 일 추가…" maxlength="60" inputmode="text"/>
+          <input type="text" id="el-new-task-time" class="time-inp" placeholder="10:00" inputmode="numeric"/>
+          <button class="btn-add-inline" onclick="addTask()">추가</button>
         </div>
       </div>
     </div>
 
-    <div style="text-align:center;padding:4px 0 2px;font-size:10px;color:var(--muted);font-family:var(--mono);">
-      ← 스와이프로 날짜 이동 →
-    </div>
+    <div class="swipe-hint">← 스와이프로 날짜 이동 →</div>
+    <div style="height:8px;"></div>
   </div>
 
   <!-- ════ LOG VIEW ════ -->
   <div id="view-log" style="display:none;">
     <div id="el-log-container"></div>
+    <div style="height:8px;"></div>
   </div>
 
   <!-- ════ ROUTINE EDIT VIEW ════ -->
   <div id="view-routine-edit" style="display:none;">
-    <div class="card">
-      <div class="card-header">
-        <div class="card-title">
-          <div class="dot dot-purple"></div>
-          루틴 항목 관리
+    <div class="section-group">
+      <div class="section-header">루틴 항목 관리</div>
+      <div class="list-card">
+        <div id="el-routine-edit-list"></div>
+        <div class="add-row">
+          <input type="text" id="el-new-routine" placeholder="새 루틴 추가…" maxlength="50" inputmode="text"/>
+          <input type="text" id="el-new-routine-time" class="time-inp" placeholder="09:00" inputmode="numeric"/>
+          <button class="btn-add-inline" onclick="addRoutine()">추가</button>
         </div>
       </div>
-      <div id="el-routine-edit-list"></div>
-      <div class="add-area">
-        <div class="add-form">
-          <input type="text" id="el-new-routine" placeholder="새 루틴 추가..." maxlength="50" inputmode="text"/>
-          <input type="text" id="el-new-routine-time" class="time-field" placeholder="09:00" inputmode="numeric"/>
-          <button class="btn btn-add" onclick="addRoutine()">추가</button>
-        </div>
-      </div>
+      <div class="section-footer">핸들(⠿)을 드래그해서 순서를 변경할 수 있습니다.</div>
     </div>
 
-    <!-- Token management -->
-    <div style="display:flex;justify-content:center;gap:8px;padding:4px 0 8px;">
-      <button class="btn btn-secondary" onclick="manualSync()">🔄 지금 동기화</button>
-      <button class="btn btn-secondary" onclick="resetToken()">🔑 토큰 재설정</button>
+    <div class="token-reset-row">
+      <button class="btn-blue" onclick="manualSync()">🔄 지금 동기화</button>
+      <button class="btn-red" onclick="resetToken()">🔑 토큰 재설정</button>
     </div>
+    <div style="height:8px;"></div>
   </div>
 
 </main>
 
-<!-- ── Bottom nav ── -->
-<nav class="bottom-nav">
-  <button class="nav-tab active" id="nav-planner" onclick="switchTab('planner', this)">
-    <div class="nav-tab-icon">📋</div>
+<!-- ── Tab Bar ── -->
+<nav class="tab-bar">
+  <button class="tab-item active" id="nav-planner" onclick="switchTab('planner',this)">
+    <div class="tab-icon">📋</div>
     <span>플래너</span>
-    <div class="nav-tab-dot"></div>
   </button>
-  <button class="nav-tab" id="nav-log" onclick="switchTab('log', this)">
-    <div class="nav-tab-icon">📅</div>
+  <button class="tab-item" id="nav-log" onclick="switchTab('log',this)">
+    <div class="tab-icon">📅</div>
     <span>기록</span>
-    <div class="nav-tab-dot"></div>
   </button>
-  <button class="nav-tab" id="nav-routine" onclick="switchTab('routine-edit', this)">
-    <div class="nav-tab-icon">⚙️</div>
+  <button class="tab-item" id="nav-routine" onclick="switchTab('routine-edit',this)">
+    <div class="tab-icon">⚙️</div>
     <span>루틴 설정</span>
-    <div class="nav-tab-dot"></div>
   </button>
 </nav>
 
 <script>
 'use strict';
+/* ══════════════════════════════════════════
+   1. CONSTANTS & HELPERS
+══════════════════════════════════════════ */
+const DAYS_KO   = ['일요일','월요일','화요일','수요일','목요일','금요일','토요일'];
+const MONTHS_KO = ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'];
 
-/* ════════════════════════════════════════════════
-   1. UTILITY
-════════════════════════════════════════════════ */
-const DAYS   = ['일요일','월요일','화요일','수요일','목요일','금요일','토요일'];
-const MONTHS = ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'];
+const $ = id => document.getElementById(id);
+function lsGet(k,d){ try{const v=localStorage.getItem(k);return v!==null?JSON.parse(v):d;}catch{return d;} }
+function lsSet(k,v){ try{localStorage.setItem(k,JSON.stringify(v));}catch{} }
 
-function lsGet(k, fallback) {
-  try { const v = localStorage.getItem(k); return v !== null ? JSON.parse(v) : fallback; }
-  catch { return fallback; }
-}
-function lsSet(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch {} }
-
-function pad2(n) { return String(n).padStart(2, '0'); }
-function todayKey() {
-  const d = new Date();
+function pad2(n){ return String(n).padStart(2,'0'); }
+function todayKey(){
+  const d=new Date();
   return `${d.getFullYear()}-${pad2(d.getMonth()+1)}-${pad2(d.getDate())}`;
 }
-function parseKey(s) {
-  const [y,m,d] = s.split('-').map(Number);
-  return new Date(y, m-1, d);
-}
-function shiftKey(s, n) {
-  const d = parseKey(s);
-  d.setDate(d.getDate() + n);
-  return `${d.getFullYear()}-${pad2(d.getMonth()+1)}-${pad2(d.getDate())}`;
-}
-function fmtDate(s) {
-  const d = parseKey(s);
-  return `${d.getFullYear()}년 ${MONTHS[d.getMonth()]} ${d.getDate()}일`;
-}
-function fmtWeekday(s) { return DAYS[parseKey(s).getDay()]; }
-function escHtml(s) {
-  return String(s)
-    .replace(/&/g,'&amp;').replace(/</g,'&lt;')
-    .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-}
+function parseKey(s){ const[y,m,d]=s.split('-').map(Number); return new Date(y,m-1,d); }
+function shiftKey(s,n){ const d=parseKey(s); d.setDate(d.getDate()+n); return `${d.getFullYear()}-${pad2(d.getMonth()+1)}-${pad2(d.getDate())}`; }
+function fmtDate(s){ const d=parseKey(s); return `${d.getFullYear()}년 ${MONTHS_KO[d.getMonth()]} ${d.getDate()}일`; }
+function fmtWd(s){ return DAYS_KO[parseKey(s).getDay()]; }
+function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 
-/* ════════════════════════════════════════════════
+/* ══════════════════════════════════════════
    2. DATA MODEL
-════════════════════════════════════════════════ */
-let routines = [];   // [{id, name, time}]
+══════════════════════════════════════════ */
+let routines = [];
 let nextRid  = 10;
-let dayMap   = {};   // { 'YYYY-MM-DD': {checks:{}, tasks:[{id,name,time,done}]} }
+let dayMap   = {};
 
-function getAllData()  { return { routines, nextRid, days: dayMap, v: 2 }; }
-function applyData(d) {
-  if (!d) return;
+function getAllData(){ return {routines, nextRid, days:dayMap, v:3}; }
+function applyData(d){
+  if(!d) return;
   routines = d.routines || [];
-  nextRid  = d.nextRid  || Math.max(10, ...routines.map(r => r.id + 1));
+  nextRid  = d.nextRid  || Math.max(10,...(d.routines||[]).map(r=>r.id+1),10);
   dayMap   = d.days     || {};
 }
-function cacheLocal() { lsSet('dp_cache', getAllData()); }
+function cacheLocal(){ lsSet('dp_cache', getAllData()); }
+function getDayData(k){ if(!dayMap[k]) dayMap[k]={checks:{},tasks:[]}; return dayMap[k]; }
+function saveDayData(k,v){ dayMap[k]=v; cacheLocal(); scheduleSync(); }
+function saveRoutines(){ cacheLocal(); scheduleSync(); }
 
-function getDayData(key) {
-  if (!dayMap[key]) dayMap[key] = { checks: {}, tasks: [] };
-  return dayMap[key];
-}
-function saveDayData(key, data) {
-  dayMap[key] = data;
-  cacheLocal();
-  scheduleSync();
-}
-function saveRoutines() { cacheLocal(); scheduleSync(); }
+/* ══════════════════════════════════════════
+   3. GITHUB CONTENTS API SYNC
+   Saves data/planner.json directly to the repo
+══════════════════════════════════════════ */
+const GH_OWNER = 'uping74';
+const GH_REPO  = 'Daily-plan';
+const GH_PATH  = 'data/planner.json';
+const GH_API   = `https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/${GH_PATH}`;
 
-/* ════════════════════════════════════════════════
-   3. GIST SYNC
-════════════════════════════════════════════════ */
-const GIST_FILE = 'daily-planner-data.json';
-let gToken  = lsGet('dp_token', '');
-let gistId  = lsGet('dp_gist_id', '');
-let syncTmr = null;
+let ghToken  = lsGet('dp_token','');
+let fileSha  = lsGet('dp_sha','');   // needed for updates
+let syncTmr  = null;
+let isSyncing = false;
 
-// Sync status UI
-function setSyncDot(state, label) {
-  document.getElementById('el-sync-dot').className = 'sync-dot ' + state;
-  document.getElementById('el-sync-label').textContent = label || '';
+function setSyncDot(state){
+  $('el-sync-dot').className = 'sync-dot ' + state;
 }
-function showSyncBar(msg) {
-  document.getElementById('el-sync-msg').textContent = msg;
-  document.getElementById('el-sync-bar').classList.remove('hidden');
+function showSyncBar(msg){
+  $('el-sync-msg').textContent = msg;
+  $('el-sync-bar').classList.remove('hidden');
 }
-function hideSyncBar() {
-  document.getElementById('el-sync-bar').classList.add('hidden');
+function hideSyncBar(){ $('el-sync-bar').classList.add('hidden'); }
+
+function ghHeaders(extra={}){
+  return {
+    'Authorization': `token ${ghToken}`,
+    'Accept': 'application/vnd.github.v3+json',
+    'Content-Type': 'application/json',
+    ...extra
+  };
 }
 
-async function gistLoad() {
-  if (!gToken || !gistId) return null;
-  setSyncDot('syncing', '동기화 중…');
-  try {
-    const r = await fetch(`https://api.github.com/gists/${gistId}`, {
-      headers: { Authorization: `token ${gToken}`, Accept: 'application/vnd.github.v3+json' }
-    });
-    if (!r.ok) throw new Error(`HTTP ${r.status}`);
-    const json = await r.json();
-    const raw  = json.files?.[GIST_FILE]?.content;
-    if (!raw) return {};
-    setSyncDot('ok', '');
-    hideSyncBar();
-    return JSON.parse(raw);
-  } catch(e) {
-    setSyncDot('err', '');
-    showSyncBar(`불러오기 실패: ${e.message}`);
+async function ghLoad(){
+  if(!ghToken) return null;
+  setSyncDot('syncing');
+  try{
+    const r = await fetch(GH_API + '?t=' + Date.now(), { headers: ghHeaders() });
+    if(r.status === 404){
+      // File doesn't exist yet — that's fine, will be created on first save
+      setSyncDot('ok'); hideSyncBar();
+      return {};
+    }
+    if(!r.ok) throw new Error(`HTTP ${r.status}`);
+    const j = await r.json();
+    fileSha = j.sha;
+    lsSet('dp_sha', fileSha);
+    const content = JSON.parse(atob(j.content.replace(/\n/g,'')));
+    setSyncDot('ok'); hideSyncBar();
+    return content;
+  }catch(e){
+    setSyncDot('err');
+    showSyncBar('불러오기 실패: ' + e.message);
     return null;
   }
 }
 
-async function gistSave(data) {
-  if (!gToken) return;
-  setSyncDot('syncing', '저장 중…');
-  try {
+async function ghSave(data){
+  if(!ghToken || isSyncing) return;
+  isSyncing = true;
+  setSyncDot('syncing');
+  try{
     const body = {
-      files: { [GIST_FILE]: { content: JSON.stringify(data, null, 2) } }
+      message: `planner: update ${todayKey()}`,
+      content: btoa(unescape(encodeURIComponent(JSON.stringify(data, null, 2)))),
+      ...(fileSha ? { sha: fileSha } : {})
     };
-    let r;
-    if (!gistId) {
-      r = await fetch('https://api.github.com/gists', {
-        method: 'POST',
-        headers: { Authorization: `token ${gToken}`, 'Content-Type': 'application/json', Accept: 'application/vnd.github.v3+json' },
-        body: JSON.stringify({ ...body, description: 'Daily Planner Data', public: false })
-      });
-    } else {
-      r = await fetch(`https://api.github.com/gists/${gistId}`, {
-        method: 'PATCH',
-        headers: { Authorization: `token ${gToken}`, 'Content-Type': 'application/json', Accept: 'application/vnd.github.v3+json' },
-        body: JSON.stringify(body)
-      });
-    }
-    if (!r.ok) throw new Error(`HTTP ${r.status}`);
-    const json = await r.json();
-    if (!gistId) { gistId = json.id; lsSet('dp_gist_id', gistId); }
-    setSyncDot('ok', '');
-    hideSyncBar();
-  } catch(e) {
-    setSyncDot('err', '');
-    showSyncBar(`저장 실패: ${e.message}`);
-  }
-}
-
-function scheduleSync() {
-  clearTimeout(syncTmr);
-  syncTmr = setTimeout(() => gistSave(getAllData()), 1800);
-}
-
-async function syncNow() {
-  clearTimeout(syncTmr);
-  const data = await gistLoad();
-  if (data) { applyData(data); cacheLocal(); renderAll(); }
-}
-async function manualSync() { await syncNow(); }
-
-/* ════════════════════════════════════════════════
-   4. TOKEN SETUP
-════════════════════════════════════════════════ */
-async function saveToken() {
-  const t = document.getElementById('el-token-input').value.trim();
-  if (!t) { alert('토큰을 입력하세요.'); return; }
-  gToken = t; lsSet('dp_token', t);
-  setSyncDot('syncing', '연결 중…');
-  try {
-    const r = await fetch('https://api.github.com/gists', {
-      headers: { Authorization: `token ${t}`, Accept: 'application/vnd.github.v3+json' }
+    const r = await fetch(GH_API, {
+      method: 'PUT',
+      headers: ghHeaders(),
+      body: JSON.stringify(body)
     });
-    if (!r.ok) throw new Error(`토큰 오류 (HTTP ${r.status})`);
-    const gists = await r.json();
-    const found = gists.find(g => g.files?.[GIST_FILE]);
-    if (found) {
-      gistId = found.id; lsSet('dp_gist_id', gistId);
-      const data = await gistLoad();
-      if (data) { applyData(data); cacheLocal(); }
-    } else {
-      gistId = ''; lsSet('dp_gist_id', '');
-      await gistSave(getAllData());
+    if(!r.ok){
+      const err = await r.json().catch(()=>({}));
+      // If sha conflict, reload and retry once
+      if(r.status === 409 || (err.message||'').includes('sha')){
+        fileSha = ''; lsSet('dp_sha','');
+        const fresh = await ghLoad();
+        if(fresh){ applyData(fresh); cacheLocal(); }
+        isSyncing = false;
+        await ghSave(getAllData());
+        return;
+      }
+      throw new Error(`HTTP ${r.status}: ${err.message||''}`);
     }
-    launchApp();
-  } catch(e) {
-    gToken = ''; lsSet('dp_token', '');
-    setSyncDot('err', '');
-    alert(`연결 실패: ${e.message}\n\n토큰의 gist 권한을 확인하세요.`);
+    const j = await r.json();
+    fileSha = j.content?.sha || j.commit?.sha || fileSha;
+    lsSet('dp_sha', fileSha);
+    setSyncDot('ok'); hideSyncBar();
+  }catch(e){
+    setSyncDot('err');
+    showSyncBar('저장 실패: ' + e.message);
+  }finally{
+    isSyncing = false;
   }
 }
 
-function resetToken() {
-  if (!confirm('토큰을 초기화하고 설정 화면으로 이동할까요?')) return;
-  gToken = ''; gistId = '';
-  lsSet('dp_token', ''); lsSet('dp_gist_id', '');
-  setSyncDot('off', '');
+function scheduleSync(){
+  clearTimeout(syncTmr);
+  syncTmr = setTimeout(()=> ghSave(getAllData()), 2000);
+}
+async function syncNow(){
+  clearTimeout(syncTmr);
+  const d = await ghLoad();
+  if(d){ applyData(d); cacheLocal(); renderAll(); if(activeTab==='log') renderLog(); }
+}
+async function manualSync(){ await syncNow(); }
+
+/* ══════════════════════════════════════════
+   4. TOKEN SETUP
+══════════════════════════════════════════ */
+async function saveToken(){
+  const t = $('el-token-input').value.trim();
+  if(!t){ alert('토큰을 입력하세요.'); return; }
+  ghToken = t; lsSet('dp_token', t);
+  fileSha = ''; lsSet('dp_sha','');
+  setSyncDot('syncing');
+  try{
+    // Verify token works
+    const r = await fetch(`https://api.github.com/repos/${GH_OWNER}/${GH_REPO}`, {
+      headers: ghHeaders()
+    });
+    if(!r.ok) throw new Error(`저장소 접근 실패 (HTTP ${r.status})\n토큰의 repo 권한을 확인하세요.`);
+    // Load existing data if any
+    const data = await ghLoad();
+    if(data && Object.keys(data).length > 0){ applyData(data); cacheLocal(); }
+    else { await ghSave(getAllData()); }
+    launchApp();
+  }catch(e){
+    ghToken = ''; lsSet('dp_token','');
+    setSyncDot('err');
+    alert('연결 실패: ' + e.message);
+  }
+}
+
+function resetToken(){
+  if(!confirm('토큰을 초기화하고 설정 화면으로 이동할까요?')) return;
+  ghToken = ''; fileSha = '';
+  lsSet('dp_token',''); lsSet('dp_sha','');
+  setSyncDot('off');
   showView('setup');
 }
 
-/* ════════════════════════════════════════════════
-   5. VIEW MANAGEMENT
-════════════════════════════════════════════════ */
+/* ══════════════════════════════════════════
+   5. VIEW & TAB MANAGEMENT
+══════════════════════════════════════════ */
 let activeTab = 'planner';
-
-function showView(name) {
-  ['setup','planner','log','routine-edit'].forEach(v => {
-    document.getElementById(`view-${v}`).style.display = v === name ? '' : 'none';
+function showView(name){
+  ['setup','planner','log','routine-edit'].forEach(v=>{
+    $(('view-'+v)).style.display = v===name ? '' : 'none';
   });
 }
-
-function launchApp() {
-  activeTab = 'planner';
+function launchApp(){
+  activeTab='planner';
   showView('planner');
-  document.querySelectorAll('.nav-tab').forEach(b => b.classList.remove('active'));
-  document.getElementById('nav-planner').classList.add('active');
+  document.querySelectorAll('.tab-item').forEach(b=>b.classList.remove('active'));
+  $('nav-planner').classList.add('active');
   renderAll();
 }
-
-function switchTab(tab, btn) {
+function switchTab(tab, btn){
   activeTab = tab;
-  document.querySelectorAll('.nav-tab').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.tab-item').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
   showView(tab);
-  document.getElementById('el-scroll').scrollTop = 0;
-  if (tab === 'log')          renderLog();
-  if (tab === 'routine-edit') renderRoutineEdit();
+  $('el-scroll').scrollTop=0;
+  if(tab==='log') renderLog();
+  if(tab==='routine-edit') renderRoutineEdit();
 }
 
-/* ════════════════════════════════════════════════
+/* ══════════════════════════════════════════
    6. RENDER — HEADER
-════════════════════════════════════════════════ */
+══════════════════════════════════════════ */
 let currentDay = todayKey();
-
-function renderHeader() {
-  document.getElementById('el-date-heading').textContent = fmtDate(currentDay);
-  document.getElementById('el-date-sub').textContent =
-    fmtWeekday(currentDay) + (currentDay === todayKey() ? ' · 오늘' : '');
+function renderHeader(){
+  $('el-nav-title').textContent = fmtDate(currentDay);
+  $('el-nav-sub').textContent   = fmtWd(currentDay) + (currentDay===todayKey() ? ' · 오늘' : '');
 }
+function renderAll(){ renderHeader(); renderPlanner(); }
 
-function renderAll() { renderHeader(); renderPlanner(); }
-
-/* ════════════════════════════════════════════════
+/* ══════════════════════════════════════════
    7. RENDER — PLANNER
-════════════════════════════════════════════════ */
-function renderPlanner() {
+══════════════════════════════════════════ */
+function renderPlanner(){
   const day    = getDayData(currentDay);
-  const checks = day.checks || {};
-  const tasks  = day.tasks  || [];
-  const rDone  = routines.filter(r => checks['r' + r.id]).length;
+  const checks = day.checks||{};
+  const tasks  = day.tasks||[];
+  const rDone  = routines.filter(r=>checks['r'+r.id]).length;
   const rTotal = routines.length;
-  const tDone  = tasks.filter(t => t.done).length;
+  const tDone  = tasks.filter(t=>t.done).length;
   const tTotal = tasks.length;
-  const total  = rTotal + tTotal;
-  const done   = rDone  + tDone;
-  const pct    = total ? Math.round(done / total * 100) : 0;
+  const total  = rTotal+tTotal;
+  const done   = rDone+tDone;
+  const pct    = total ? Math.round(done/total*100) : 0;
 
   // Stats
-  document.getElementById('el-stat-r').textContent   = `${rDone}/${rTotal}`;
-  document.getElementById('el-stat-t').textContent   = `${tDone}/${tTotal}`;
-  document.getElementById('el-stat-pct').textContent = `${pct}%`;
-  document.getElementById('el-r-badge').textContent  = `${rDone}/${rTotal}`;
-  document.getElementById('el-t-badge').textContent  = `${tDone}/${tTotal}`;
-  document.getElementById('el-r-prog').style.width   = (rTotal ? Math.round(rDone / rTotal * 100) : 0) + '%';
-  document.getElementById('el-t-prog').style.width   = (tTotal ? Math.round(tDone / tTotal * 100) : 0) + '%';
+  $('el-stat-r').textContent   = `${rDone}/${rTotal}`;
+  $('el-stat-t').textContent   = `${tDone}/${tTotal}`;
+  $('el-stat-pct').textContent = `${pct}%`;
+  $('el-prog-pct').textContent = `${pct}%`;
+  $('el-prog-fill').style.width = pct+'%';
 
-  // Progress strip
-  const strip = document.getElementById('el-strip');
-  strip.innerHTML = '';
-  for (let i = 0; i < rTotal; i++) {
-    const s = document.createElement('div');
-    s.className = 'prog-seg' + (i < rDone ? ' s-purple' : '');
-    strip.appendChild(s);
-  }
-  for (let i = 0; i < tTotal; i++) {
-    const s = document.createElement('div');
-    s.className = 'prog-seg' + (i < tDone ? ' s-green' : '');
-    strip.appendChild(s);
-  }
-
-  // Routine items
-  const rl = document.getElementById('el-routine-list');
+  // Routine list
+  const rl = $('el-routine-list');
   rl.innerHTML = routines.length
-    ? ''
-    : '<div class="empty-msg">루틴 설정 탭에서 항목을 추가하세요.</div>';
-  routines.forEach(r => {
-    const isDone = !!checks['r' + r.id];
+    ? '' : '<div class="empty-row">루틴 설정 탭에서 항목을 추가하세요</div>';
+  routines.forEach(r=>{
+    const done2 = !!checks['r'+r.id];
     const row = document.createElement('div');
-    row.className = 'item-row';
+    row.className = 'row';
     row.innerHTML = `
-      <div class="item-check ${isDone ? 'checked-purple' : ''}"
-           ontouchend="tapRoutine(event,${r.id})"
-           onclick="toggleRoutine(${r.id})">${isDone ? '✓' : ''}</div>
-      <div class="item-name ${isDone ? 'struck' : ''}"
-           ontouchend="tapRoutine(event,${r.id})"
-           onclick="toggleRoutine(${r.id})">${escHtml(r.name)}</div>
-      ${r.time ? `<div class="item-time">${r.time}</div>` : ''}`;
+      <div class="row-check ${done2?'done-blue':''}"
+           ontouchend="tapR(event,${r.id})" onclick="toggleR(${r.id})">${done2?'✓':''}</div>
+      <div class="row-body" ontouchend="tapR(event,${r.id})" onclick="toggleR(${r.id})">
+        <div class="row-title ${done2?'done':''}">${esc(r.name)}</div>
+        ${r.time?`<div class="row-sub">${r.time}</div>`:''}
+      </div>`;
     rl.appendChild(row);
   });
 
-  // Task items
-  const tl = document.getElementById('el-task-list');
+  // Task list
+  const tl = $('el-task-list');
   tl.innerHTML = tasks.length
-    ? ''
-    : '<div class="empty-msg">오늘 할 일을 추가해 보세요.</div>';
-  tasks.forEach(t => {
+    ? '' : '<div class="empty-row">아직 오늘 할 일이 없습니다</div>';
+  tasks.forEach(t=>{
     const row = document.createElement('div');
-    row.className = 'item-row';
+    row.className = 'row';
     row.innerHTML = `
-      <div class="item-check ${t.done ? 'checked-green' : ''}"
-           ontouchend="tapTask(event,'${t.id}')"
-           onclick="toggleTask('${t.id}')">${t.done ? '✓' : ''}</div>
-      <div class="item-name ${t.done ? 'struck' : ''}"
-           ontouchend="tapTask(event,'${t.id}')"
-           onclick="toggleTask('${t.id}')">${escHtml(t.name)}</div>
-      ${t.time ? `<div class="item-time">${t.time}</div>` : ''}
-      <button class="btn-ghost" onclick="deleteTask('${t.id}')" aria-label="삭제">✕</button>`;
+      <div class="row-check ${t.done?'done-green':''}"
+           ontouchend="tapT(event,'${t.id}')" onclick="toggleT('${t.id}')">${t.done?'✓':''}</div>
+      <div class="row-body" ontouchend="tapT(event,'${t.id}')" onclick="toggleT('${t.id}')">
+        <div class="row-title ${t.done?'done':''}">${esc(t.name)}</div>
+        ${t.time?`<div class="row-sub">${t.time}</div>`:''}
+      </div>
+      ${t.time?'':`<div class="row-trailing"></div>`}
+      <button class="btn-del" onclick="delTask('${t.id}')" aria-label="삭제">×</button>`;
     tl.appendChild(row);
   });
 }
 
-// Prevent double-fire (touchend + click) on mobile
-function tapRoutine(e, id) { e.preventDefault(); toggleRoutine(id); }
-function tapTask(e, id)    { e.preventDefault(); toggleTask(id); }
+function tapR(e,id){ e.preventDefault(); toggleR(id); }
+function tapT(e,id){ e.preventDefault(); toggleT(id); }
 
-function toggleRoutine(id) {
-  const day = getDayData(currentDay);
-  day.checks['r' + id] = !day.checks['r' + id];
-  saveDayData(currentDay, day);
-  renderPlanner();
+function toggleR(id){
+  const day=getDayData(currentDay);
+  day.checks['r'+id]=!day.checks['r'+id];
+  saveDayData(currentDay,day); renderPlanner();
 }
-function toggleTask(id) {
-  const day = getDayData(currentDay);
-  const t = (day.tasks || []).find(x => x.id === id);
-  if (t) t.done = !t.done;
-  saveDayData(currentDay, day);
-  renderPlanner();
+function toggleT(id){
+  const day=getDayData(currentDay);
+  const t=(day.tasks||[]).find(x=>x.id===id);
+  if(t) t.done=!t.done;
+  saveDayData(currentDay,day); renderPlanner();
 }
-function deleteTask(id) {
-  const day = getDayData(currentDay);
-  day.tasks = (day.tasks || []).filter(t => t.id !== id);
-  saveDayData(currentDay, day);
-  renderPlanner();
+function delTask(id){
+  const day=getDayData(currentDay);
+  day.tasks=(day.tasks||[]).filter(t=>t.id!==id);
+  saveDayData(currentDay,day); renderPlanner();
 }
-function addTask() {
-  const inp  = document.getElementById('el-new-task');
-  const tInp = document.getElementById('el-new-task-time');
-  const name = inp.value.trim();
-  if (!name) return;
-  const day = getDayData(currentDay);
-  day.tasks = day.tasks || [];
-  day.tasks.push({ id: 't' + Date.now(), name, time: tInp.value.trim(), done: false });
-  saveDayData(currentDay, day);
-  inp.value = ''; tInp.value = '';
-  inp.focus();
-  renderPlanner();
+function addTask(){
+  const inp=$('el-new-task'), ti=$('el-new-task-time');
+  const name=inp.value.trim(); if(!name) return;
+  const day=getDayData(currentDay);
+  day.tasks=day.tasks||[];
+  day.tasks.push({id:'t'+Date.now(),name,time:ti.value.trim(),done:false});
+  saveDayData(currentDay,day);
+  inp.value=''; ti.value=''; inp.focus(); renderPlanner();
 }
 
-/* ════════════════════════════════════════════════
-   8. RENDER — ROUTINE EDIT (drag-and-drop + touch)
-════════════════════════════════════════════════ */
-let dragSrcIdx  = null;
-let touchDragIdx = null;
-
-function renderRoutineEdit() {
-  const list = document.getElementById('el-routine-edit-list');
-  list.innerHTML = '';
-  if (!routines.length) {
-    list.innerHTML = '<div class="empty-msg">아직 루틴이 없습니다.</div>';
-    return;
+/* ══════════════════════════════════════════
+   8. RENDER — ROUTINE EDIT
+══════════════════════════════════════════ */
+let dragIdx=null, touchIdx=null;
+function renderRoutineEdit(){
+  const list=$('el-routine-edit-list');
+  list.innerHTML='';
+  if(!routines.length){
+    list.innerHTML='<div class="empty-row">아직 루틴이 없습니다</div>'; return;
   }
-  list.insertAdjacentHTML('beforeend', '<div class="reorder-tip">⠿ 핸들을 드래그해서 순서 변경</div>');
-  routines.forEach((r, idx) => {
-    const row = document.createElement('div');
-    row.className = 'routine-item';
-    row.dataset.index = idx;
-    row.innerHTML = `
-      <span class="drag-handle" draggable="true" data-index="${idx}">⠿</span>
-      <div class="order-badge">${idx + 1}</div>
-      <div class="item-name" style="flex:1;">${escHtml(r.name)}</div>
-      ${r.time ? `<div class="item-time">${r.time}</div>` : ''}
-      <button class="btn-ghost" onclick="deleteRoutine(${r.id})" aria-label="삭제">✕</button>`;
+  routines.forEach((r,idx)=>{
+    const row=document.createElement('div');
+    row.className='routine-row'; row.dataset.index=idx;
+    row.innerHTML=`
+      <span class="drag-grip" draggable="true" data-index="${idx}">⠿</span>
+      <div class="order-num">${idx+1}</div>
+      <div class="row-body" style="pointer-events:none;">
+        <div class="row-title">${esc(r.name)}</div>
+        ${r.time?`<div class="row-sub">${r.time}</div>`:''}
+      </div>
+      <button class="btn-del" onclick="delRoutine(${r.id})" aria-label="삭제">×</button>`;
     list.appendChild(row);
   });
-
-  list.querySelectorAll('.drag-handle').forEach(h => {
-    h.addEventListener('dragstart', onDragStart);
-    h.addEventListener('dragend',   onDragEnd);
-    h.addEventListener('touchstart', onTouchStart, { passive: false });
-    h.addEventListener('touchmove',  onTouchMove,  { passive: false });
-    h.addEventListener('touchend',   onTouchEnd);
+  list.querySelectorAll('.drag-grip').forEach(h=>{
+    h.addEventListener('dragstart',  dStart);
+    h.addEventListener('dragend',    dEnd);
+    h.addEventListener('touchstart', tStart, {passive:false});
+    h.addEventListener('touchmove',  tMove,  {passive:false});
+    h.addEventListener('touchend',   tEnd);
   });
-  list.querySelectorAll('.routine-item').forEach(row => {
-    row.addEventListener('dragover',  onDragOver);
-    row.addEventListener('dragleave', onDragLeave);
-    row.addEventListener('drop',      onDrop);
+  list.querySelectorAll('.routine-row').forEach(r=>{
+    r.addEventListener('dragover',  dOver);
+    r.addEventListener('dragleave', dLeave);
+    r.addEventListener('drop',      dDrop);
   });
 }
 
-// Mouse drag handlers
-function onDragStart(e) {
-  dragSrcIdx = parseInt(e.target.dataset.index);
-  const row = e.target.closest('.routine-item');
-  if (row) setTimeout(() => row.classList.add('is-dragging'), 0);
-  e.dataTransfer.effectAllowed = 'move';
-  e.dataTransfer.setData('text/plain', dragSrcIdx);
+function dStart(e){ dragIdx=parseInt(e.target.dataset.index); const r=e.target.closest('.routine-row'); if(r) setTimeout(()=>r.classList.add('is-dragging'),0); e.dataTransfer.effectAllowed='move'; e.dataTransfer.setData('text/plain',dragIdx); }
+function dEnd(){ document.querySelectorAll('.routine-row').forEach(r=>r.classList.remove('is-dragging','drag-over')); dragIdx=null; }
+function dOver(e){ e.preventDefault(); const i=parseInt(e.currentTarget.dataset.index); if(i!==dragIdx){ document.querySelectorAll('.routine-row').forEach(r=>r.classList.remove('drag-over')); e.currentTarget.classList.add('drag-over'); } }
+function dLeave(e){ e.currentTarget.classList.remove('drag-over'); }
+function dDrop(e){ e.preventDefault(); const ti=parseInt(e.currentTarget.dataset.index); if(dragIdx===null||dragIdx===ti) return; const[m]=routines.splice(dragIdx,1); routines.splice(ti,0,m); saveRoutines(); renderRoutineEdit(); renderPlanner(); }
+function tStart(e){ touchIdx=parseInt(e.target.dataset.index); }
+function tMove(e){ if(touchIdx===null) return; e.preventDefault(); const y=e.touches[0].clientY; document.querySelectorAll('.routine-row').forEach((r,i)=>{ const rc=r.getBoundingClientRect(); r.classList.toggle('drag-over',y>rc.top&&y<rc.bottom&&i!==touchIdx); }); }
+function tEnd(e){ if(touchIdx===null) return; const y=e.changedTouches[0].clientY; let ti=touchIdx; document.querySelectorAll('.routine-row').forEach((r,i)=>{ const rc=r.getBoundingClientRect(); if(y>rc.top&&y<rc.bottom) ti=i; r.classList.remove('drag-over'); }); if(ti!==touchIdx){ const[m]=routines.splice(touchIdx,1); routines.splice(ti,0,m); saveRoutines(); renderRoutineEdit(); renderPlanner(); } touchIdx=null; }
+
+function addRoutine(){
+  const inp=$('el-new-routine'), ti=$('el-new-routine-time');
+  const name=inp.value.trim(); if(!name) return;
+  routines.push({id:nextRid++,name,time:ti.value.trim()});
+  saveRoutines(); inp.value=''; ti.value=''; inp.focus(); renderRoutineEdit();
 }
-function onDragEnd() {
-  document.querySelectorAll('.routine-item').forEach(r => r.classList.remove('is-dragging', 'drag-target'));
-  dragSrcIdx = null;
-}
-function onDragOver(e) {
-  e.preventDefault();
-  e.dataTransfer.dropEffect = 'move';
-  const idx = parseInt(e.currentTarget.dataset.index);
-  if (idx !== dragSrcIdx) {
-    document.querySelectorAll('.routine-item').forEach(r => r.classList.remove('drag-target'));
-    e.currentTarget.classList.add('drag-target');
-  }
-}
-function onDragLeave(e) { e.currentTarget.classList.remove('drag-target'); }
-function onDrop(e) {
-  e.preventDefault();
-  const tgt = parseInt(e.currentTarget.dataset.index);
-  if (dragSrcIdx === null || dragSrcIdx === tgt) return;
-  const [moved] = routines.splice(dragSrcIdx, 1);
-  routines.splice(tgt, 0, moved);
+function delRoutine(id){
+  if(!confirm('이 루틴을 삭제할까요?')) return;
+  routines=routines.filter(r=>r.id!==id);
   saveRoutines(); renderRoutineEdit(); renderPlanner();
 }
 
-// Touch drag handlers
-function onTouchStart(e) {
-  touchDragIdx = parseInt(e.target.dataset.index);
-}
-function onTouchMove(e) {
-  if (touchDragIdx === null) return;
-  e.preventDefault();
-  const y = e.touches[0].clientY;
-  document.querySelectorAll('.routine-item').forEach((row, i) => {
-    const r = row.getBoundingClientRect();
-    row.classList.toggle('drag-target', y > r.top && y < r.bottom && i !== touchDragIdx);
-  });
-}
-function onTouchEnd(e) {
-  if (touchDragIdx === null) return;
-  const y = e.changedTouches[0].clientY;
-  let target = touchDragIdx;
-  document.querySelectorAll('.routine-item').forEach((row, i) => {
-    const r = row.getBoundingClientRect();
-    if (y > r.top && y < r.bottom) target = i;
-    row.classList.remove('drag-target');
-  });
-  if (target !== touchDragIdx) {
-    const [moved] = routines.splice(touchDragIdx, 1);
-    routines.splice(target, 0, moved);
-    saveRoutines(); renderRoutineEdit(); renderPlanner();
-  }
-  touchDragIdx = null;
-}
-
-function addRoutine() {
-  const inp  = document.getElementById('el-new-routine');
-  const tInp = document.getElementById('el-new-routine-time');
-  const name = inp.value.trim();
-  if (!name) return;
-  routines.push({ id: nextRid++, name, time: tInp.value.trim() });
-  saveRoutines(); inp.value = ''; tInp.value = ''; inp.focus();
-  renderRoutineEdit();
-}
-function deleteRoutine(id) {
-  if (!confirm('이 루틴을 삭제할까요?')) return;
-  routines = routines.filter(r => r.id !== id);
-  saveRoutines(); renderRoutineEdit(); renderPlanner();
-}
-
-/* ════════════════════════════════════════════════
+/* ══════════════════════════════════════════
    9. RENDER — LOG
-════════════════════════════════════════════════ */
-function renderLog() {
-  const cont = document.getElementById('el-log-container');
-  cont.innerHTML = '';
-  let hasAny = false;
-
-  for (let i = 0; i < 30; i++) {
-    const key    = shiftKey(todayKey(), -i);
-    const day    = getDayData(key);
-    const checks = day.checks || {};
-    const tasks  = day.tasks  || [];
-
-    const rDone = routines.filter(r =>  checks['r' + r.id]);
-    const rSkip = routines.filter(r => !checks['r' + r.id]);
-    const tDone = tasks.filter(t =>  t.done);
-    const tSkip = tasks.filter(t => !t.done);
-
-    if (!rDone.length && !tDone.length && !rSkip.length && !tasks.length) continue;
-    hasAny = true;
-
-    const total = routines.length + tasks.length;
-    const done  = rDone.length + tDone.length;
-    const pct   = total ? Math.round(done / total * 100) : 0;
-    const pctColor = pct >= 80 ? 'var(--green)' : pct >= 50 ? 'var(--accent-mid)' : 'var(--muted)';
-
-    let html = `
-      <div class="log-card">
-        <div class="log-card-header">
-          <div class="log-date">${fmtDate(key)}${i === 0 ? ' <span style="color:var(--purple);">오늘</span>' : ''}</div>
-          <div class="log-pct" style="color:${pctColor};">${pct}%</div>
-        </div>`;
-
-    rDone.forEach(r => { html += `<div class="log-item"><div class="log-dot done-r"></div><div class="log-name">${escHtml(r.name)}</div></div>`; });
-    tDone.forEach(t => { html += `<div class="log-item"><div class="log-dot done-t"></div><div class="log-name">${escHtml(t.name)}</div></div>`; });
-    rSkip.forEach(r => { html += `<div class="log-item"><div class="log-dot skipped"></div><div class="log-name skipped">${escHtml(r.name)}</div></div>`; });
-    tSkip.forEach(t => { html += `<div class="log-item"><div class="log-dot skipped"></div><div class="log-name skipped">${escHtml(t.name)}</div></div>`; });
-
-    html += '</div>';
-    cont.innerHTML += html;
+══════════════════════════════════════════ */
+function renderLog(){
+  const cont=$('el-log-container'); cont.innerHTML=''; let any=false;
+  for(let i=0;i<30;i++){
+    const key=shiftKey(todayKey(),-i);
+    const day=getDayData(key); const ch=day.checks||{}, tasks=day.tasks||[];
+    const rd=routines.filter(r=>ch['r'+r.id]);
+    const rs=routines.filter(r=>!ch['r'+r.id]);
+    const td=tasks.filter(t=>t.done);
+    const ts=tasks.filter(t=>!t.done);
+    if(!rd.length&&!td.length&&!rs.length&&!tasks.length) continue;
+    any=true;
+    const tot=routines.length+tasks.length, dn=rd.length+td.length;
+    const pct=tot?Math.round(dn/tot*100):0;
+    const badgeCls = pct>=80?'high':pct>=50?'mid':'low';
+    let html=`<div class="log-day-card">
+      <div class="log-day-header">
+        <div class="log-day-title">${fmtDate(key)}${i===0?'<span class="today-badge">오늘</span>':''}</div>
+        <div class="log-day-badge ${badgeCls}">${pct}%</div>
+      </div>`;
+    rd.forEach(r=>{html+=`<div class="log-row"><div class="log-icon">🔵</div><div class="log-name">${esc(r.name)}</div></div>`;});
+    td.forEach(t=>{html+=`<div class="log-row"><div class="log-icon">✅</div><div class="log-name">${esc(t.name)}</div></div>`;});
+    rs.forEach(r=>{html+=`<div class="log-row"><div class="log-icon">⚪</div><div class="log-name skipped">${esc(r.name)}</div></div>`;});
+    ts.forEach(t=>{html+=`<div class="log-row"><div class="log-icon">⚪</div><div class="log-name skipped">${esc(t.name)}</div></div>`;});
+    html+='</div>'; cont.innerHTML+=html;
   }
-
-  if (!hasAny) {
-    cont.innerHTML = '<div class="empty-msg">아직 기록이 없습니다. 플래너에서 체크를 시작해 보세요.</div>';
-  }
+  if(!any) cont.innerHTML='<div style="padding:40px 16px;text-align:center;color:var(--label-3);font-size:15px;">아직 기록이 없습니다</div>';
 }
 
-/* ════════════════════════════════════════════════
-   10. NAVIGATION
-════════════════════════════════════════════════ */
-function changeDay(dir) {
-  currentDay = shiftKey(currentDay, dir);
-  renderHeader();
-  renderPlanner();
-  document.getElementById('el-scroll').scrollTop = 0;
+/* ══════════════════════════════════════════
+   10. DAY NAVIGATION & SWIPE
+══════════════════════════════════════════ */
+function changeDay(dir){
+  currentDay=shiftKey(currentDay,dir);
+  renderHeader(); renderPlanner();
+  $('el-scroll').scrollTop=0;
 }
+let sx=0,sy=0;
+$('el-scroll').addEventListener('touchstart',e=>{sx=e.touches[0].clientX;sy=e.touches[0].clientY;},{passive:true});
+$('el-scroll').addEventListener('touchend',e=>{
+  if(activeTab!=='planner') return;
+  const dx=e.changedTouches[0].clientX-sx, dy=e.changedTouches[0].clientY-sy;
+  if(Math.abs(dx)>55&&Math.abs(dx)>Math.abs(dy)*1.4) changeDay(dx<0?1:-1);
+},{passive:true});
 
-// Swipe gesture for day navigation
-let swipeX = 0, swipeY = 0;
-document.getElementById('el-scroll').addEventListener('touchstart', e => {
-  swipeX = e.touches[0].clientX;
-  swipeY = e.touches[0].clientY;
-}, { passive: true });
-document.getElementById('el-scroll').addEventListener('touchend', e => {
-  if (activeTab !== 'planner') return;
-  const dx = e.changedTouches[0].clientX - swipeX;
-  const dy = e.changedTouches[0].clientY - swipeY;
-  if (Math.abs(dx) > 55 && Math.abs(dx) > Math.abs(dy) * 1.5) {
-    changeDay(dx < 0 ? 1 : -1);
-  }
-}, { passive: true });
-
-/* ════════════════════════════════════════════════
+/* ══════════════════════════════════════════
    11. AUTO-REFRESH ON FOCUS
-════════════════════════════════════════════════ */
-document.addEventListener('visibilitychange', async () => {
-  if (document.visibilityState === 'visible' && gToken && gistId) {
-    const data = await gistLoad();
-    if (data) {
-      applyData(data); cacheLocal(); renderAll();
-      if (activeTab === 'log') renderLog();
-    }
+══════════════════════════════════════════ */
+document.addEventListener('visibilitychange', async()=>{
+  if(document.visibilityState==='visible'&&ghToken){
+    const d=await ghLoad();
+    if(d){ applyData(d); cacheLocal(); renderAll(); if(activeTab==='log') renderLog(); }
   }
 });
 
-/* ════════════════════════════════════════════════
-   12. PWA INSTALL PROMPT
-════════════════════════════════════════════════ */
-let deferredPrompt = null;
-window.addEventListener('beforeinstallprompt', e => {
-  e.preventDefault();
-  deferredPrompt = e;
-  if (!lsGet('dp_install_dismissed', false)) {
-    document.getElementById('el-install-banner').classList.remove('hidden');
-  }
-});
-function installPWA() {
-  if (!deferredPrompt) return;
-  deferredPrompt.prompt();
-  deferredPrompt.userChoice.then(() => {
-    deferredPrompt = null;
-    document.getElementById('el-install-banner').classList.add('hidden');
-  });
-}
-function dismissInstall() {
-  document.getElementById('el-install-banner').classList.add('hidden');
-  lsSet('dp_install_dismissed', true);
-}
-window.addEventListener('appinstalled', () => {
-  document.getElementById('el-install-banner').classList.add('hidden');
-});
+/* ══════════════════════════════════════════
+   12. KEYBOARD SHORTCUTS
+══════════════════════════════════════════ */
+$('el-new-task').addEventListener('keydown',   e=>{ if(e.key==='Enter') addTask(); });
+$('el-new-routine').addEventListener('keydown',e=>{ if(e.key==='Enter') addRoutine(); });
+$('el-token-input').addEventListener('keydown',e=>{ if(e.key==='Enter') saveToken(); });
 
-/* ════════════════════════════════════════════════
-   13. KEYBOARD SHORTCUTS
-════════════════════════════════════════════════ */
-document.getElementById('el-new-task').addEventListener('keydown', e => { if (e.key === 'Enter') addTask(); });
-document.getElementById('el-new-routine').addEventListener('keydown', e => { if (e.key === 'Enter') addRoutine(); });
-document.getElementById('el-token-input').addEventListener('keydown', e => { if (e.key === 'Enter') saveToken(); });
-
-/* ════════════════════════════════════════════════
-   14. SERVICE WORKER
-════════════════════════════════════════════════ */
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('./sw.js').catch(() => {});
-  });
+/* ══════════════════════════════════════════
+   13. SERVICE WORKER
+══════════════════════════════════════════ */
+if('serviceWorker' in navigator){
+  window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));
 }
 
-/* ════════════════════════════════════════════════
-   15. INIT
-════════════════════════════════════════════════ */
-(async function init() {
-  // 1) Apply cached data immediately (instant render, no flicker)
+/* ══════════════════════════════════════════
+   14. INIT
+══════════════════════════════════════════ */
+(async function init(){
+  // Always apply local cache first for instant display
   const cached = lsGet('dp_cache', null);
-  if (cached) {
-    applyData(cached);
-  } else {
-    // First-ever launch: seed default routines
-    routines = [
-      { id: 1, name: '아침 일과 정리 및 MIT 3개 작성', time: '09:00' },
-      { id: 2, name: '이메일/메신저 확인 (집중 시간 외)', time: '09:30' },
-      { id: 3, name: '업무 종료 전 내일 할 일 메모', time: '18:00' },
-    ];
-    nextRid = 10;
+  if(cached){ applyData(cached); }
+  else {
+    routines=[
+      {id:1,name:'아침 일과 정리 및 MIT 3개 작성',time:'09:00'},
+      {id:2,name:'이메일/메신저 확인 (집중 시간 외)',time:'09:30'},
+      {id:3,name:'업무 종료 전 내일 할 일 메모',time:'18:00'},
+    ]; nextRid=10;
   }
 
-  // 2) Show correct screen
-  if (!gToken) {
-    showView('setup');
-    setSyncDot('off', '');
+  if(!ghToken){
+    showView('setup'); setSyncDot('off');
   } else {
-    // Render from cache instantly, then fetch from Gist
     launchApp();
-    const remote = await gistLoad();
-    if (remote) { applyData(remote); cacheLocal(); renderAll(); }
+    const remote = await ghLoad();
+    if(remote && Object.keys(remote).length>0){
+      applyData(remote); cacheLocal(); renderAll();
+    }
   }
 })();
 </script>
