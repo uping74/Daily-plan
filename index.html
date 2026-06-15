@@ -12,11 +12,11 @@
 <title>하루 플래너</title>
 <link rel="manifest" href="manifest.json"/>
 <link rel="apple-touch-icon" href="icons/icon-192.png"/>
-<link rel="preconnect" href="https://fonts.googleapis.com"/>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet"/>
 <style>
 /* ═══════════════════════════════════════════
-   DESIGN TOKENS — iOS/macOS system colors
+   DESIGN TOKENS — macOS / iOS system style
 ═══════════════════════════════════════════ */
 :root {
   --bg:          #F2F2F7;
@@ -24,21 +24,25 @@
   --surface-2:   #F2F2F7;
   --sep:         rgba(60,60,67,.12);
   --sep-solid:   #C6C6C8;
-  --label:       #000000;
+  --label:       #1D1D1F;
   --label-2:     rgba(60,60,67,.6);
   --label-3:     rgba(60,60,67,.3);
   --fill-1:      rgba(120,120,128,.2);
   --fill-2:      rgba(120,120,128,.16);
   --fill-3:      rgba(118,118,128,.12);
-  --blue:        #007AFF;
-  --green:       #34C759;
-  --indigo:      #5856D6;
-  --orange:      #FF9500;
-  --red:         #FF3B30;
+  --blue:        #0A84FF;
+  --green:       #30D158;
+  --indigo:      #5E5CE6;
+  --orange:      #FF9F0A;
+  --red:         #FF453A;
   --gray:        #8E8E93;
   --gray-3:      #C7C7CC;
   --gray-5:      #E5E5EA;
-  --font:        'Noto Sans KR',-apple-system,BlinkMacSystemFont,'Helvetica Neue',sans-serif;
+
+  /* macOS uses SF Pro; we approximate with Inter for Latin + Noto Sans KR for Hangul */
+  --font: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display",
+          "Inter", "Noto Sans KR", "Helvetica Neue", Arial, sans-serif;
+
   --r-sm:   8px;
   --r-md:  12px;
   --r-lg:  16px;
@@ -46,17 +50,16 @@
   --safe-b: env(safe-area-inset-bottom,0px);
   --safe-l: env(safe-area-inset-left,0px);
   --safe-r: env(safe-area-inset-right,0px);
-  /* Layout breakpoints (JS mirrors these) */
   --sidebar-w: 260px;
   --content-max: 720px;
 }
 @media (prefers-color-scheme:dark){:root{
-  --bg:        #000;
-  --surface:   #1C1C1E;
-  --surface-2: #2C2C2E;
+  --bg:        #1E1E1E;
+  --surface:   #2C2C2E;
+  --surface-2: #1C1C1E;
   --sep:       rgba(84,84,88,.65);
   --sep-solid: #38383A;
-  --label:     #FFF;
+  --label:     #F5F5F7;
   --label-2:   rgba(235,235,245,.6);
   --label-3:   rgba(235,235,245,.3);
   --fill-1:    rgba(120,120,128,.36);
@@ -77,27 +80,28 @@ body{
   color:var(--label);
   height:100%;
   -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
   overflow:hidden;
+  letter-spacing:-0.01em;
 }
 
 /* ═══════════════════════════════════════════
-   APP SHELL — three layout modes
-   Mobile  (<768px):  stacked, bottom tab bar
-   Tablet  (768-1199): sidebar + content
-   Desktop (≥1200px): wider sidebar + content
+   SF SYMBOL-STYLE ICONS (inline SVG, stroke-based)
 ═══════════════════════════════════════════ */
-.app-shell{
-  display:flex;
-  height:100%;
-  overflow:hidden;
-}
+.sym{ display:inline-flex; align-items:center; justify-content:center; flex-shrink:0; }
+.sym svg{ width:1em; height:1em; display:block; }
 
-/* ── Sidebar (tablet/desktop only) ── */
+/* ═══════════════════════════════════════════
+   APP SHELL
+═══════════════════════════════════════════ */
+.app-shell{ display:flex; height:100%; overflow:hidden; }
+
+/* ── Sidebar (tablet/desktop) ── */
 .sidebar{
-  display:none; /* hidden on mobile */
+  display:none;
   flex-direction:column;
   width:var(--sidebar-w);
-  background:rgba(242,242,247,.9);
+  background:rgba(246,246,248,.78);
   backdrop-filter:saturate(180%) blur(24px);
   -webkit-backdrop-filter:saturate(180%) blur(24px);
   border-right:0.5px solid var(--sep-solid);
@@ -107,296 +111,167 @@ body{
   overflow:hidden;
   z-index:10;
 }
-@media (prefers-color-scheme:dark){
-  .sidebar{background:rgba(28,28,30,.9);}
-}
-.sidebar-brand{
-  padding:20px 20px 8px;
-}
+@media (prefers-color-scheme:dark){ .sidebar{background:rgba(36,36,38,.78);} }
+.sidebar-brand{ padding:22px 20px 10px; }
 .sidebar-app-name{
-  font-size:11px;
-  font-weight:500;
-  letter-spacing:.1em;
-  text-transform:uppercase;
-  color:var(--label-2);
-  margin-bottom:4px;
+  font-size:11px; font-weight:600; letter-spacing:.12em;
+  text-transform:uppercase; color:var(--label-3); margin-bottom:6px;
 }
 .sidebar-date-heading{
-  font-size:22px;
-  font-weight:700;
-  letter-spacing:-.5px;
-  line-height:1.2;
+  font-size:21px; font-weight:700; letter-spacing:-.02em; line-height:1.25;
 }
 .sidebar-date-sub{
-  font-size:13px;
-  color:var(--label-2);
-  margin-top:2px;
-  display:flex;
-  align-items:center;
-  gap:5px;
+  font-size:13px; color:var(--label-2); margin-top:3px;
+  display:flex; align-items:center; gap:5px;
 }
-.sidebar-day-nav{
-  display:flex;
-  align-items:center;
-  gap:6px;
-  padding:10px 20px 0;
-}
+.sidebar-day-nav{ display:flex; align-items:center; gap:6px; padding:12px 20px 0; }
 .sidebar-today-btn{
-  flex:1;
-  background:var(--blue);
-  color:#fff;
-  border:none;
-  border-radius:var(--r-sm);
-  padding:7px 0;
-  font-size:13px;
-  font-weight:500;
-  font-family:var(--font);
-  cursor:pointer;
-  transition:opacity .15s;
+  flex:1; background:var(--blue); color:#fff; border:none;
+  border-radius:var(--r-sm); padding:7px 0; font-size:13px; font-weight:600;
+  font-family:var(--font); cursor:pointer; transition:filter .15s; letter-spacing:-.01em;
 }
-.sidebar-today-btn:active{opacity:.75;}
+.sidebar-today-btn:active{ filter:brightness(0.85); }
 .sidebar-arrow{
-  width:34px;height:34px;
-  border:none;
-  background:var(--fill-2);
-  border-radius:var(--r-sm);
-  color:var(--blue);
-  font-size:20px;
-  display:flex;align-items:center;justify-content:center;
-  cursor:pointer;
-  font-weight:300;
-  transition:background .15s;
-  flex-shrink:0;
+  width:34px; height:34px; border:none; background:var(--fill-2);
+  border-radius:var(--r-sm); color:var(--blue); font-size:16px;
+  display:flex; align-items:center; justify-content:center; cursor:pointer;
+  transition:background .15s; flex-shrink:0;
 }
-.sidebar-arrow:active{background:var(--fill-1);}
-.sidebar-sep{height:0.5px;background:var(--sep-solid);margin:14px 20px;}
-.sidebar-nav-list{
-  flex:1;
-  overflow-y:auto;
-  padding:0 12px;
-}
+.sidebar-arrow:active{ background:var(--fill-1); }
+.sidebar-sep{ height:0.5px; background:var(--sep-solid); margin:16px 20px; }
+.sidebar-nav-list{ flex:1; overflow-y:auto; padding:0 12px; }
 .sidebar-nav-item{
-  display:flex;
-  align-items:center;
-  gap:10px;
-  padding:10px 10px;
-  border-radius:var(--r-md);
-  cursor:pointer;
-  background:none;
-  border:none;
-  width:100%;
-  text-align:left;
-  font-family:var(--font);
-  font-size:15px;
-  font-weight:400;
-  color:var(--label-2);
-  transition:background .12s,color .12s;
-  -webkit-user-select:none;
+  display:flex; align-items:center; gap:10px; padding:8px 10px;
+  border-radius:var(--r-md); cursor:pointer; background:none; border:none;
+  width:100%; text-align:left; font-family:var(--font);
+  font-size:14px; font-weight:500; color:var(--label-2);
+  transition:background .12s,color .12s; -webkit-user-select:none;
+  letter-spacing:-.01em;
 }
-.sidebar-nav-item:active{background:var(--fill-2);}
-.sidebar-nav-item.active{
-  background:var(--fill-2);
-  color:var(--label);
-  font-weight:500;
-}
-.sidebar-nav-item.active .sni-icon{
-  background:var(--blue);
-  color:#fff;
-}
+.sidebar-nav-item:active{ background:var(--fill-2); }
+.sidebar-nav-item.active{ background:var(--fill-2); color:var(--label); }
+.sidebar-nav-item.active .sni-icon{ color:var(--blue); }
 .sni-icon{
-  width:30px;height:30px;
-  border-radius:7px;
-  background:var(--fill-2);
-  display:flex;align-items:center;justify-content:center;
-  font-size:15px;
-  flex-shrink:0;
-  transition:background .12s;
+  width:24px; height:24px; display:flex; align-items:center; justify-content:center;
+  font-size:17px; flex-shrink:0; color:var(--label-2); transition:color .12s;
 }
-.sidebar-bottom{
-  padding:12px 20px calc(12px + var(--safe-b));
-}
-.sync-status-row{
-  display:flex;
-  align-items:center;
-  gap:7px;
-  font-size:12px;
-  color:var(--label-2);
-}
+.sidebar-bottom{ padding:14px 20px calc(14px + var(--safe-b)); }
+.sync-status-row{ display:flex; align-items:center; gap:7px; font-size:12px; color:var(--label-2); letter-spacing:-.01em; }
 
-/* ── Main content column ── */
-.main-col{
-  flex:1;
-  display:flex;
-  flex-direction:column;
-  overflow:hidden;
-  min-width:0;
-}
+/* ── Main column ── */
+.main-col{ flex:1; display:flex; flex-direction:column; overflow:hidden; min-width:0; }
 
-/* ── Mobile top nav bar ── */
+/* ── Mobile top nav ── */
 .mobile-nav{
-  background:rgba(242,242,247,.9);
+  background:rgba(246,246,248,.78);
   backdrop-filter:saturate(180%) blur(20px);
   -webkit-backdrop-filter:saturate(180%) blur(20px);
   border-bottom:0.5px solid var(--sep-solid);
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
+  display:flex; align-items:center; justify-content:space-between;
   padding:calc(8px + var(--safe-t)) 12px 10px;
-  flex-shrink:0;
-  z-index:5;
-  position:relative;
+  flex-shrink:0; z-index:5; position:relative;
 }
-@media (prefers-color-scheme:dark){.mobile-nav{background:rgba(28,28,30,.9);}}
-.mobile-nav-center{flex:1;text-align:center;}
-.mobile-nav-title{font-size:17px;font-weight:600;letter-spacing:-.4px;}
+@media (prefers-color-scheme:dark){ .mobile-nav{background:rgba(36,36,38,.78);} }
+.mobile-nav-center{ flex:1; text-align:center; }
+.mobile-nav-title{ font-size:17px; font-weight:700; letter-spacing:-.02em; }
 .mobile-nav-sub{
-  font-size:11px;color:var(--label-2);
-  display:flex;align-items:center;justify-content:center;gap:4px;
+  font-size:11px; color:var(--label-2);
+  display:flex; align-items:center; justify-content:center; gap:4px; margin-top:1px;
 }
 .mnav-btn{
-  width:36px;height:36px;
-  border:none;background:none;
-  color:var(--blue);font-size:22px;font-weight:300;
-  display:flex;align-items:center;justify-content:center;
-  border-radius:50%;cursor:pointer;
-  -webkit-user-select:none;
-  flex-shrink:0;
+  width:34px; height:34px; border:none; background:none;
+  color:var(--blue); font-size:18px;
+  display:flex; align-items:center; justify-content:center;
+  border-radius:50%; cursor:pointer; -webkit-user-select:none; flex-shrink:0;
 }
-.mnav-btn:active{background:var(--fill-1);}
+.mnav-btn:active{ background:var(--fill-1); }
 
 /* Sync dot */
-.sync-dot{width:6px;height:6px;border-radius:50%;display:inline-block;flex-shrink:0;}
-.sync-dot.off{background:var(--gray-3);}
-.sync-dot.ok{background:var(--green);}
-.sync-dot.syncing{background:var(--orange);animation:sdpulse 1s infinite;}
-.sync-dot.err{background:var(--red);}
+.sync-dot{ width:6px; height:6px; border-radius:50%; display:inline-block; flex-shrink:0; }
+.sync-dot.off{ background:var(--gray-3); }
+.sync-dot.ok{ background:var(--green); }
+.sync-dot.syncing{ background:var(--orange); animation:sdpulse 1s infinite; }
+.sync-dot.err{ background:var(--red); }
 @keyframes sdpulse{0%,100%{opacity:1}50%{opacity:.2}}
 
 /* ── Scroll content ── */
-.scroll-area{
-  flex:1;
-  overflow-y:auto;
-  -webkit-overflow-scrolling:touch;
-  overscroll-behavior-y:contain;
-}
-/* content inner max-width on desktop */
-.content-wrap{
-  max-width:var(--content-max);
-  margin:0 auto;
-  padding-bottom:16px;
-}
+.scroll-area{ flex:1; overflow-y:auto; -webkit-overflow-scrolling:touch; overscroll-behavior-y:contain; }
+.content-wrap{ max-width:var(--content-max); margin:0 auto; padding-bottom:16px; }
 
 /* ── Mobile bottom tab bar ── */
 .tab-bar{
-  background:rgba(242,242,247,.9);
+  background:rgba(246,246,248,.78);
   backdrop-filter:saturate(180%) blur(20px);
   -webkit-backdrop-filter:saturate(180%) blur(20px);
   border-top:0.5px solid var(--sep-solid);
-  display:flex;
-  padding-bottom:var(--safe-b);
-  flex-shrink:0;
-  z-index:10;
+  display:flex; padding-bottom:var(--safe-b); flex-shrink:0; z-index:10;
 }
-@media (prefers-color-scheme:dark){.tab-bar{background:rgba(28,28,30,.9);}}
+@media (prefers-color-scheme:dark){ .tab-bar{background:rgba(36,36,38,.78);} }
 .tab-item{
-  flex:1;
-  display:flex;flex-direction:column;align-items:center;justify-content:center;
-  gap:2px;
-  background:none;border:none;
-  color:var(--gray);
-  font-family:var(--font);
-  font-size:10px;font-weight:400;
-  cursor:pointer;
-  padding:6px 4px;
-  -webkit-user-select:none;
-  transition:color .15s;
+  flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center;
+  gap:3px; background:none; border:none; color:var(--gray);
+  font-family:var(--font); font-size:10px; font-weight:500;
+  cursor:pointer; padding:7px 4px; -webkit-user-select:none; transition:color .15s;
+  letter-spacing:-.01em;
 }
-.tab-item:active{opacity:.6;}
-.tab-item.active{color:var(--blue);}
-.tab-icon{font-size:23px;line-height:1;transition:transform .15s;}
-.tab-item.active .tab-icon{transform:scale(1.05);}
+.tab-item:active{ opacity:.6; }
+.tab-item.active{ color:var(--blue); }
+.tab-icon{ font-size:22px; line-height:1; transition:transform .15s; }
+.tab-item.active .tab-icon{ transform:scale(1.05); }
 
-/* ── Responsive: tablet & desktop — hide mobile nav/tabbar ── */
+/* ── Responsive ── */
 @media (min-width:768px){
-  .sidebar{display:flex;}
-  .mobile-nav{display:none;}
-  .tab-bar{display:none;}
-  .scroll-area{
-    /* no bottom padding for tab bar */
-  }
-  .content-wrap{
-    padding:0 32px 32px;
-  }
+  .sidebar{ display:flex; }
+  .mobile-nav{ display:none; }
+  .tab-bar{ display:none; }
+  .content-wrap{ padding:0 32px 32px; }
 }
-@media (min-width:1200px){
-  :root{--sidebar-w:280px;}
-}
+@media (min-width:1200px){ :root{ --sidebar-w:280px; } }
 
 /* ═══════════════════════════════════════════
    ALERT STRIP
 ═══════════════════════════════════════════ */
 .alert-strip{
-  display:flex;align-items:center;gap:8px;
-  margin:12px 16px 0;
-  padding:10px 14px;
-  border-radius:var(--r-md);
-  font-size:13px;line-height:1.4;
+  display:flex; align-items:center; gap:8px; margin:12px 16px 0;
+  padding:10px 14px; border-radius:var(--r-md); font-size:13px; line-height:1.4;
 }
-@media (min-width:768px){.alert-strip{margin:16px 0 0;}}
-.alert-strip.hidden{display:none!important;}
-.alert-strip.warn{background:rgba(255,149,0,.15);color:#915400;}
-@media (prefers-color-scheme:dark){.alert-strip.warn{color:#FFB340;}}
-.as-actions{margin-left:auto;display:flex;gap:6px;flex-shrink:0;}
+@media (min-width:768px){ .alert-strip{ margin:16px 0 0; } }
+.alert-strip.hidden{ display:none!important; }
+.alert-strip.warn{ background:rgba(255,159,10,.15); color:#9A5B00; }
+@media (prefers-color-scheme:dark){ .alert-strip.warn{ color:#FFC069; } }
+.as-actions{ margin-left:auto; display:flex; gap:6px; flex-shrink:0; }
 .btn-text{
-  background:none;border:none;color:var(--blue);
-  font-size:13px;font-weight:600;font-family:var(--font);
-  cursor:pointer;padding:2px 4px;
+  background:none; border:none; color:var(--blue);
+  font-size:13px; font-weight:600; font-family:var(--font); cursor:pointer; padding:2px 4px;
 }
-.btn-text:active{opacity:.5;}
-.btn-text.red{color:var(--red);}
+.btn-text:active{ opacity:.5; }
+.btn-text.red{ color:var(--red); }
 
 /* ═══════════════════════════════════════════
    STATS ROW
 ═══════════════════════════════════════════ */
-.stats-row{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:10px;
-  padding:16px 16px 0;
+.stats-row{ display:grid; grid-template-columns:repeat(3,1fr); gap:10px; padding:16px 16px 0; }
+@media (min-width:768px){ .stats-row{ padding:20px 0 0; gap:12px; } }
+.stat-tile{ background:var(--surface); border-radius:var(--r-lg); padding:14px 12px 12px; }
+.stat-value{ font-size:24px; font-weight:700; letter-spacing:-.02em; line-height:1; font-family:var(--font); }
+.stat-label{ font-size:12px; color:var(--label-2); margin-top:4px; letter-spacing:-.01em; }
+.stat-tile.blue   .stat-value{ color:var(--blue); }
+.stat-tile.green  .stat-value{ color:var(--green); filter:brightness(0.85); }
+.stat-tile.indigo .stat-value{ color:var(--indigo); }
+@media (prefers-color-scheme:dark){
+  .stat-tile.green .stat-value{ color:#28BD4C; filter:none; }
 }
-@media (min-width:768px){
-  .stats-row{padding:20px 0 0;gap:12px;}
-}
-.stat-tile{
-  background:var(--surface);
-  border-radius:var(--r-lg);
-  padding:14px 12px 12px;
-}
-.stat-value{
-  font-size:24px;font-weight:700;
-  letter-spacing:-.5px;line-height:1;
-}
-.stat-label{font-size:12px;color:var(--label-2);margin-top:4px;}
-.stat-tile.blue   .stat-value{color:var(--blue);}
-.stat-tile.green  .stat-value{color:var(--green);}
-.stat-tile.indigo .stat-value{color:var(--indigo);}
 
 /* ═══════════════════════════════════════════
    PROGRESS BAR
 ═══════════════════════════════════════════ */
-.prog-section{padding:14px 16px 0;}
-@media (min-width:768px){.prog-section{padding:16px 0 0;}}
-.prog-labels{
-  display:flex;justify-content:space-between;
-  font-size:12px;color:var(--label-2);margin-bottom:6px;
-}
-.prog-labels span:last-child{font-weight:600;}
-.prog-track{
-  height:6px;background:var(--fill-3);
-  border-radius:99px;overflow:hidden;
-}
+.prog-section{ padding:14px 16px 0; }
+@media (min-width:768px){ .prog-section{ padding:16px 0 0; } }
+.prog-labels{ display:flex; justify-content:space-between; font-size:12px; color:var(--label-2); margin-bottom:6px; letter-spacing:-.01em; }
+.prog-labels span:last-child{ font-weight:700; color:var(--label); }
+.prog-track{ height:6px; background:var(--fill-3); border-radius:99px; overflow:hidden; }
 .prog-fill{
-  height:100%;border-radius:99px;
+  height:100%; border-radius:99px;
   background:linear-gradient(90deg,var(--blue),var(--indigo));
   transition:width .4s cubic-bezier(.4,0,.2,1);
 }
@@ -404,280 +279,185 @@ body{
 /* ═══════════════════════════════════════════
    SECTION GROUP & CARDS
 ═══════════════════════════════════════════ */
-.section-group{margin:20px 16px 0;}
-@media (min-width:768px){.section-group{margin:20px 0 0;}}
+.section-group{ margin:20px 16px 0; }
+@media (min-width:768px){ .section-group{ margin:20px 0 0; } }
 .section-hdr{
-  font-size:13px;font-weight:400;
-  color:var(--label-2);
-  text-transform:uppercase;letter-spacing:.06em;
-  padding:0 4px 7px;
+  font-size:13px; font-weight:600; color:var(--label-2);
+  text-transform:uppercase; letter-spacing:.06em; padding:0 4px 7px;
 }
-.section-ftr{
-  font-size:13px;color:var(--label-2);
-  padding:8px 4px 0;line-height:1.5;
-}
-.card{
-  background:var(--surface);
-  border-radius:var(--r-lg);
-  overflow:hidden;
-}
+.section-ftr{ font-size:13px; color:var(--label-2); padding:8px 4px 0; line-height:1.5; }
+.card{ background:var(--surface); border-radius:var(--r-lg); overflow:hidden; }
 
 /* ═══════════════════════════════════════════
    LIST ROWS
 ═══════════════════════════════════════════ */
 .row{
-  display:flex;align-items:center;gap:12px;
-  padding:12px 16px;min-height:52px;
-  position:relative;
-  transition:background .1s;
+  display:flex; align-items:center; gap:12px; padding:12px 16px; min-height:54px;
+  position:relative; transition:background .1s;
 }
-.row+.row::before{
-  content:'';position:absolute;top:0;left:56px;right:0;
-  height:0.5px;background:var(--sep);
-}
-.row:active{background:var(--fill-3);}
+.row+.row::before{ content:''; position:absolute; top:0; left:56px; right:0; height:0.5px; background:var(--sep); }
+.row:active{ background:var(--fill-3); }
+
+/* SF Symbol-style checkmark circles */
 .row-check{
-  width:28px;height:28px;border-radius:50%;
-  border:2px solid var(--gray-3);
-  display:flex;align-items:center;justify-content:center;
-  flex-shrink:0;cursor:pointer;
-  font-size:14px;color:transparent;
-  transition:all .2s cubic-bezier(.4,0,.2,1);
-  -webkit-user-select:none;
+  width:24px; height:24px; border-radius:50%; border:2px solid var(--gray-3);
+  display:flex; align-items:center; justify-content:center; flex-shrink:0; cursor:pointer;
+  transition:all .2s cubic-bezier(.4,0,.2,1); -webkit-user-select:none;
 }
-.row-check.done-blue{background:var(--blue);border-color:var(--blue);color:#fff;}
-.row-check.done-green{background:var(--green);border-color:var(--green);color:#fff;}
-.row-body{flex:1;min-width:0;cursor:pointer;}
+.row-check svg{ width:13px; height:13px; opacity:0; transform:scale(0.5); transition:all .2s cubic-bezier(.34,1.56,.64,1); }
+.row-check.done-blue{ background:var(--blue); border-color:var(--blue); }
+.row-check.done-blue svg{ opacity:1; transform:scale(1); }
+.row-check.done-green{ background:var(--green); border-color:var(--green); }
+.row-check.done-green svg{ opacity:1; transform:scale(1); }
+
+.row-body{ flex:1; min-width:0; cursor:pointer; }
 .row-title{
-  font-size:16px;font-weight:400;line-height:1.35;
-  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
-  transition:color .18s;
+  font-size:15px; font-weight:400; line-height:1.4; letter-spacing:-.01em;
+  overflow:hidden; text-overflow:ellipsis; white-space:nowrap; transition:color .18s;
 }
-.row-title.done{text-decoration:line-through;color:var(--label-3);}
-.row-sub{font-size:13px;color:var(--label-2);margin-top:1px;}
+.row-title.done{ text-decoration:line-through; color:var(--label-3); }
+.row-sub{ font-size:12px; color:var(--label-3); margin-top:2px; font-weight:500; letter-spacing:.01em; }
 .btn-del{
-  background:none;border:none;
-  color:var(--label-3);cursor:pointer;
-  font-size:20px;
-  width:28px;height:28px;
-  display:flex;align-items:center;justify-content:center;
-  border-radius:50%;flex-shrink:0;
-  transition:color .15s;padding:0;
+  background:none; border:none; color:var(--label-3); cursor:pointer;
+  width:28px; height:28px; display:flex; align-items:center; justify-content:center;
+  border-radius:50%; flex-shrink:0; transition:color .15s,background .15s; padding:0; font-size:17px;
 }
-.btn-del:active{color:var(--red);background:var(--fill-1);}
-.empty-row{
-  padding:20px 16px;
-  font-size:15px;color:var(--label-3);
-  text-align:center;
-}
+.btn-del:active{ color:var(--red); background:var(--fill-1); }
+.empty-row{ padding:24px 16px; font-size:14px; color:var(--label-3); text-align:center; letter-spacing:-.01em; }
 
 /* ═══════════════════════════════════════════
    ADD ROW
 ═══════════════════════════════════════════ */
-.add-row{
-  display:flex;align-items:center;
-  padding:0 16px;min-height:52px;
-  border-top:0.5px solid var(--sep);
-}
+.add-row{ display:flex; align-items:center; padding:0 16px; min-height:52px; border-top:0.5px solid var(--sep); }
 .add-row input{
-  flex:1;background:none;border:none;outline:none;
-  font-size:16px;color:var(--label);font-family:var(--font);
-  padding:12px 0;-webkit-appearance:none;
+  flex:1; background:none; border:none; outline:none; font-size:15px; color:var(--label);
+  font-family:var(--font); padding:12px 0; -webkit-appearance:none; letter-spacing:-.01em;
 }
-.add-row input::placeholder{color:var(--label-3);}
+.add-row input::placeholder{ color:var(--label-3); }
 .add-row .time-inp{
-  width:70px;flex:none;font-size:14px;color:var(--label-2);
-  text-align:right;padding:12px 0 12px 8px;
-  border-left:0.5px solid var(--sep);margin-left:8px;
+  width:64px; flex:none; font-size:13px; color:var(--label-2); text-align:right;
+  padding:12px 0 12px 8px; border-left:0.5px solid var(--sep); margin-left:8px; font-weight:500;
 }
 .btn-add{
-  background:none;border:none;
-  color:var(--blue);font-size:15px;font-weight:600;
-  font-family:var(--font);cursor:pointer;
-  padding:12px 0 12px 12px;white-space:nowrap;
-  -webkit-user-select:none;
+  background:none; border:none; color:var(--blue); font-size:14px; font-weight:600;
+  font-family:var(--font); cursor:pointer; padding:12px 0 12px 12px; white-space:nowrap;
+  -webkit-user-select:none; letter-spacing:-.01em;
 }
-.btn-add:active{opacity:.5;}
+.btn-add:active{ opacity:.5; }
 
 /* ═══════════════════════════════════════════
    ROUTINE EDIT (drag-and-drop)
 ═══════════════════════════════════════════ */
 .rrow{
-  display:flex;align-items:center;gap:10px;
-  padding:12px 16px;min-height:52px;
-  position:relative;
-  user-select:none;-webkit-user-select:none;
-  transition:background .1s,opacity .15s;
+  display:flex; align-items:center; gap:10px; padding:12px 16px; min-height:54px;
+  position:relative; user-select:none; -webkit-user-select:none; transition:background .1s,opacity .15s;
 }
-.rrow+.rrow::before{
-  content:'';position:absolute;top:0;left:52px;right:0;
-  height:0.5px;background:var(--sep);
-}
-.rrow.is-dragging{opacity:.35;background:var(--fill-2);}
-.rrow.drag-over{background:rgba(0,122,255,.08);border-top:1.5px solid var(--blue);}
+.rrow+.rrow::before{ content:''; position:absolute; top:0; left:52px; right:0; height:0.5px; background:var(--sep); }
+.rrow.is-dragging{ opacity:.35; background:var(--fill-2); }
+.rrow.drag-over{ background:rgba(10,132,255,.08); border-top:1.5px solid var(--blue); }
 .drag-grip{
-  font-size:18px;color:var(--gray);
-  cursor:grab;padding:2px 4px;flex-shrink:0;
-  touch-action:none;line-height:1;
+  color:var(--gray-3); cursor:grab; padding:4px; flex-shrink:0; touch-action:none;
+  display:flex; align-items:center; justify-content:center; font-size:18px; line-height:1;
 }
-.drag-grip:active{cursor:grabbing;}
-.order-num{
-  font-size:13px;color:var(--label-3);
-  width:16px;text-align:right;flex-shrink:0;
-}
-.reorder-tip{
-  padding:10px 16px 6px;
-  font-size:12px;color:var(--label-3);
-}
+.drag-grip:active{ cursor:grabbing; }
+.order-num{ font-size:12px; color:var(--label-3); width:16px; text-align:right; flex-shrink:0; font-weight:600; }
+.reorder-tip{ padding:10px 16px 6px; font-size:12px; color:var(--label-3); letter-spacing:-.01em; }
 
 /* ═══════════════════════════════════════════
    LOG VIEW
 ═══════════════════════════════════════════ */
-.log-card{
-  background:var(--surface);border-radius:var(--r-lg);
-  overflow:hidden;margin:20px 16px 0;
-}
-@media (min-width:768px){.log-card{margin:20px 0 0;}}
-.log-card-hdr{
-  display:flex;align-items:center;justify-content:space-between;
-  padding:12px 16px 10px;
-  border-bottom:0.5px solid var(--sep);
-}
-.log-date{font-size:15px;font-weight:600;letter-spacing:-.2px;}
-.log-badge{
-  font-size:13px;font-weight:600;
-  padding:3px 10px;border-radius:99px;
-}
-.log-badge.high{background:rgba(52,199,89,.15);color:var(--green);}
-.log-badge.mid{background:rgba(255,149,0,.15);color:var(--orange);}
-.log-badge.low{background:rgba(142,142,147,.15);color:var(--gray);}
-.log-row{
-  display:flex;align-items:center;gap:10px;
-  padding:9px 16px;font-size:14px;position:relative;
-}
-.log-row+.log-row::before{
-  content:'';position:absolute;top:0;left:42px;right:0;
-  height:0.5px;background:var(--sep);
-}
-.log-icon{font-size:14px;width:20px;text-align:center;flex-shrink:0;}
-.log-name{flex:1;line-height:1.4;}
-.log-name.skipped{color:var(--label-3);text-decoration:line-through;}
+.log-card{ background:var(--surface); border-radius:var(--r-lg); overflow:hidden; margin:20px 16px 0; }
+@media (min-width:768px){ .log-card{ margin:20px 0 0; } }
+.log-card-hdr{ display:flex; align-items:center; justify-content:space-between; padding:12px 16px 10px; border-bottom:0.5px solid var(--sep); }
+.log-date{ font-size:15px; font-weight:700; letter-spacing:-.02em; }
+.log-badge{ font-size:12px; font-weight:700; padding:3px 10px; border-radius:99px; letter-spacing:-.01em; }
+.log-badge.high{ background:rgba(48,209,88,.15); color:#1E9D40; }
+.log-badge.mid{ background:rgba(255,159,10,.15); color:var(--orange); }
+.log-badge.low{ background:rgba(142,142,147,.15); color:var(--gray); }
+@media (prefers-color-scheme:dark){ .log-badge.high{ color:var(--green); } }
+.log-row{ display:flex; align-items:center; gap:10px; padding:9px 16px; font-size:14px; position:relative; letter-spacing:-.01em; }
+.log-row+.log-row::before{ content:''; position:absolute; top:0; left:42px; right:0; height:0.5px; background:var(--sep); }
+.log-icon{ width:20px; text-align:center; flex-shrink:0; display:flex; align-items:center; justify-content:center; font-size:14px; }
+.log-name{ flex:1; line-height:1.4; }
+.log-name.skipped{ color:var(--label-3); text-decoration:line-through; }
 .today-badge{
-  font-size:11px;font-weight:600;
-  background:var(--blue);color:#fff;
-  border-radius:99px;padding:1px 7px;
-  margin-left:6px;vertical-align:middle;
+  font-size:10px; font-weight:700; background:var(--blue); color:#fff;
+  border-radius:99px; padding:2px 7px; margin-left:6px; vertical-align:middle; letter-spacing:0;
 }
 
 /* ═══════════════════════════════════════════
    SETUP SCREEN
 ═══════════════════════════════════════════ */
-.setup-wrap{
-  max-width:480px;margin:0 auto;
-  padding:0 16px 32px;
+.setup-wrap{ max-width:480px; margin:0 auto; padding:0 16px 32px; }
+@media (min-width:768px){ .setup-wrap{ padding:0 0 32px; } }
+.setup-hero{ text-align:center; padding:40px 0 24px; }
+.setup-icon{
+  width:72px; height:72px; margin:0 auto 16px; border-radius:18px;
+  background:linear-gradient(160deg,var(--blue),var(--indigo));
+  display:flex; align-items:center; justify-content:center; color:#fff;
+  box-shadow:0 8px 24px rgba(10,132,255,.25);
 }
-@media (min-width:768px){
-  .setup-wrap{padding:0 0 32px;}
-}
-.setup-hero{
-  text-align:center;padding:40px 0 24px;
-}
-.setup-icon{font-size:64px;margin-bottom:16px;}
-.setup-title{font-size:24px;font-weight:700;letter-spacing:-.5px;margin-bottom:8px;}
-.setup-desc{font-size:15px;color:var(--label-2);line-height:1.55;}
-.setup-steps{
-  background:var(--surface);
-  border-radius:var(--r-lg);overflow:hidden;
-  margin-top:8px;
-}
-.setup-step{
-  display:flex;align-items:flex-start;gap:14px;
-  padding:14px 16px;position:relative;
-}
-.setup-step+.setup-step::before{
-  content:'';position:absolute;top:0;left:52px;right:0;
-  height:0.5px;background:var(--sep);
-}
+.setup-icon svg{ width:36px; height:36px; }
+.setup-title{ font-size:24px; font-weight:700; letter-spacing:-.02em; margin-bottom:8px; }
+.setup-desc{ font-size:14px; color:var(--label-2); line-height:1.6; letter-spacing:-.01em; }
+.setup-steps{ background:var(--surface); border-radius:var(--r-lg); overflow:hidden; margin-top:8px; }
+.setup-step{ display:flex; align-items:flex-start; gap:14px; padding:14px 16px; position:relative; }
+.setup-step+.setup-step::before{ content:''; position:absolute; top:0; left:52px; right:0; height:0.5px; background:var(--sep); }
 .step-num{
-  width:28px;height:28px;border-radius:50%;
-  background:var(--blue);color:#fff;
-  display:flex;align-items:center;justify-content:center;
-  font-size:14px;font-weight:600;flex-shrink:0;margin-top:1px;
+  width:26px; height:26px; border-radius:50%; background:var(--blue); color:#fff;
+  display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:700;
+  flex-shrink:0; margin-top:1px;
 }
-.step-body{flex:1;}
-.step-title{font-size:15px;font-weight:500;margin-bottom:3px;}
-.step-desc{font-size:13px;color:var(--label-2);line-height:1.5;}
-.step-desc a{color:var(--blue);text-decoration:none;}
-.step-desc strong{color:var(--label);font-weight:500;}
-.token-wrap{margin-top:16px;}
-.token-wrap-label{
-  font-size:13px;font-weight:400;color:var(--label-2);
-  text-transform:uppercase;letter-spacing:.06em;
-  padding:0 4px 7px;
-}
+.step-body{ flex:1; }
+.step-title{ font-size:14px; font-weight:600; margin-bottom:3px; letter-spacing:-.01em; }
+.step-desc{ font-size:13px; color:var(--label-2); line-height:1.6; letter-spacing:-.01em; }
+.step-desc a{ color:var(--blue); text-decoration:none; font-weight:500; }
+.step-desc strong{ color:var(--label); font-weight:600; }
+.token-wrap{ margin-top:16px; }
+.token-wrap-label{ font-size:13px; font-weight:600; color:var(--label-2); text-transform:uppercase; letter-spacing:.06em; padding:0 4px 7px; }
 .token-row{
-  background:var(--surface);border-radius:var(--r-lg);
-  display:flex;align-items:center;overflow:hidden;
-  border:1.5px solid transparent;transition:border-color .2s;
+  background:var(--surface); border-radius:var(--r-lg); display:flex; align-items:center;
+  overflow:hidden; border:1.5px solid transparent; transition:border-color .2s;
 }
-.token-row:focus-within{border-color:var(--blue);}
+.token-row:focus-within{ border-color:var(--blue); }
 .token-row input{
-  flex:1;background:none;border:none;outline:none;
-  padding:14px 16px;font-size:15px;color:var(--label);
-  font-family:var(--font);-webkit-appearance:none;
+  flex:1; background:none; border:none; outline:none; padding:14px 16px; font-size:14px;
+  color:var(--label); font-family:var(--font); -webkit-appearance:none; letter-spacing:-.01em;
 }
-.token-row input::placeholder{color:var(--label-3);}
+.token-row input::placeholder{ color:var(--label-3); }
 .token-connect{
-  background:var(--blue);color:#fff;border:none;
-  padding:10px 16px;font-size:15px;font-weight:600;
-  font-family:var(--font);cursor:pointer;
-  border-radius:var(--r-sm);margin:6px;
-  transition:opacity .15s;
+  background:var(--blue); color:#fff; border:none; padding:10px 16px; font-size:14px; font-weight:600;
+  font-family:var(--font); cursor:pointer; border-radius:var(--r-sm); margin:6px; transition:filter .15s; letter-spacing:-.01em;
 }
-.token-connect:active{opacity:.75;}
-.setup-note{
-  font-size:13px;color:var(--label-2);line-height:1.6;
-  margin-top:12px;padding:0 4px;
-}
-.setup-section-hdr{
-  font-size:13px;font-weight:400;color:var(--label-2);
-  text-transform:uppercase;letter-spacing:.06em;
-  padding:0 4px 7px;margin-top:20px;
-}
+.token-connect:active{ filter:brightness(0.85); }
+.setup-note{ font-size:13px; color:var(--label-2); line-height:1.65; margin-top:12px; padding:0 4px; letter-spacing:-.01em; }
+.setup-section-hdr{ font-size:13px; font-weight:600; color:var(--label-2); text-transform:uppercase; letter-spacing:.06em; padding:0 4px 7px; margin-top:20px; }
 
 /* ═══════════════════════════════════════════
-   SETTINGS SECTION (token reset etc.)
+   SETTINGS / ACTIONS
 ═══════════════════════════════════════════ */
-.action-row{
-  display:flex;gap:10px;
-  padding:16px 16px 0;
-}
-@media (min-width:768px){.action-row{padding:16px 0 0;}}
+.action-row{ display:flex; gap:10px; padding:16px 16px 0; }
+@media (min-width:768px){ .action-row{ padding:16px 0 0; } }
 .action-btn{
-  flex:1;padding:13px;
-  background:var(--surface);border-radius:var(--r-lg);
-  border:none;font-size:14px;font-family:var(--font);
-  font-weight:400;cursor:pointer;
-  transition:background .15s;
+  flex:1; padding:13px; background:var(--surface); border-radius:var(--r-lg); border:none;
+  font-size:14px; font-family:var(--font); font-weight:600; cursor:pointer; transition:background .15s;
+  letter-spacing:-.01em; display:flex; align-items:center; justify-content:center; gap:6px;
 }
-.action-btn:active{background:var(--fill-2);}
-.action-btn.blue{color:var(--blue);}
-.action-btn.red{color:var(--red);}
+.action-btn:active{ background:var(--fill-2); }
+.action-btn.blue{ color:var(--blue); }
+.action-btn.red{ color:var(--red); }
 
 /* ═══════════════════════════════════════════
    SWIPE HINT
 ═══════════════════════════════════════════ */
-.swipe-hint{
-  text-align:center;font-size:12px;
-  color:var(--label-3);padding:16px 0 4px;
-}
-@media (min-width:768px){.swipe-hint{display:none;}}
+.swipe-hint{ text-align:center; font-size:12px; color:var(--label-3); padding:16px 0 4px; letter-spacing:-.01em; }
+@media (min-width:768px){ .swipe-hint{ display:none; } }
 </style>
 </head>
 <body>
 <div class="app-shell">
 
-  <!-- ══ SIDEBAR (tablet/desktop) ══ -->
+  <!-- ══ SIDEBAR ══ -->
   <aside class="sidebar" id="sidebar">
     <div class="sidebar-brand">
       <div class="sidebar-app-name">Daily Planner</div>
@@ -689,26 +469,40 @@ body{
       </div>
     </div>
     <div class="sidebar-day-nav">
-      <button class="sidebar-arrow" onclick="changeDay(-1)" aria-label="이전">‹</button>
+      <button class="sidebar-arrow" onclick="changeDay(-1)" aria-label="이전">
+        <span class="sym">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+        </span>
+      </button>
       <button class="sidebar-today-btn" onclick="goToday()">오늘</button>
-      <button class="sidebar-arrow" onclick="changeDay(1)" aria-label="다음">›</button>
+      <button class="sidebar-arrow" onclick="changeDay(1)" aria-label="다음">
+        <span class="sym">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+        </span>
+      </button>
     </div>
     <div class="sidebar-sep"></div>
     <nav class="sidebar-nav-list">
       <button class="sidebar-nav-item active" id="snav-planner" onclick="switchTab('planner',this)">
-        <div class="sni-icon">📋</div> 플래너
+        <span class="sni-icon sym">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 7h6M9 11h6M9 15h4"/></svg>
+        </span> 플래너
       </button>
       <button class="sidebar-nav-item" id="snav-log" onclick="switchTab('log',this)">
-        <div class="sni-icon">📅</div> 기록
+        <span class="sni-icon sym">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18M8 2v4M16 2v4"/></svg>
+        </span> 기록
       </button>
       <button class="sidebar-nav-item" id="snav-routine" onclick="switchTab('routine-edit',this)">
-        <div class="sni-icon">⚙️</div> 루틴 설정
+        <span class="sni-icon sym">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        </span> 루틴 설정
       </button>
     </nav>
     <div class="sidebar-bottom">
       <div class="sync-status-row">
         <span class="sync-dot off" id="sb2-sync-dot"></span>
-        <span id="sb2-sync-label" style="font-size:12px;color:var(--label-2);">오프라인</span>
+        <span id="sb2-sync-label">오프라인</span>
       </div>
     </div>
   </aside>
@@ -718,7 +512,9 @@ body{
 
     <!-- Mobile top nav -->
     <header class="mobile-nav">
-      <button class="mnav-btn" onclick="changeDay(-1)" aria-label="이전">‹</button>
+      <button class="mnav-btn" onclick="changeDay(-1)" aria-label="이전">
+        <span class="sym"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg></span>
+      </button>
       <div class="mobile-nav-center">
         <div class="mobile-nav-title" id="mn-date-heading">—</div>
         <div class="mobile-nav-sub">
@@ -726,7 +522,9 @@ body{
           <span class="sync-dot off" id="mn-sync-dot"></span>
         </div>
       </div>
-      <button class="mnav-btn" onclick="changeDay(1)" aria-label="다음">›</button>
+      <button class="mnav-btn" onclick="changeDay(1)" aria-label="다음">
+        <span class="sym"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg></span>
+      </button>
     </header>
 
     <!-- Scroll area -->
@@ -735,7 +533,7 @@ body{
 
         <!-- Sync error bar -->
         <div class="alert-strip warn hidden" id="el-sync-bar">
-          <span>⚠️</span>
+          <span class="sym"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4M12 17h.01M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/></svg></span>
           <span id="el-sync-msg" style="flex:1;">동기화 실패</span>
           <div class="as-actions">
             <button class="btn-text" onclick="syncNow()">재시도</button>
@@ -746,9 +544,11 @@ body{
         <div id="view-setup" style="display:none;">
           <div class="setup-wrap">
             <div class="setup-hero">
-              <div class="setup-icon">📋</div>
+              <div class="setup-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 7h6M9 11h6M9 15h4"/></svg>
+              </div>
               <div class="setup-title">하루 플래너</div>
-              <div class="setup-desc">GitHub 저장소에 데이터를 저장해<br>모든 기기에서 동일하게 사용하세요.</div>
+              <div class="setup-desc">GitHub Gist에 데이터를 저장해<br>모든 기기에서 동일하게 사용하세요.</div>
             </div>
             <div class="setup-section-hdr">설정 방법</div>
             <div class="setup-steps">
@@ -759,7 +559,7 @@ body{
                   <div class="step-desc">
                     <a href="https://github.com/settings/tokens/new" target="_blank">github.com/settings/tokens/new</a><br>
                     Note: <strong>daily-planner</strong> · Expiration: <strong>No expiration</strong><br>
-                    Scopes: <strong>repo</strong> 체크 → Generate token
+                    Scopes: <strong>gist</strong> 체크 → Generate token
                   </div>
                 </div>
               </div>
@@ -767,7 +567,7 @@ body{
                 <div class="step-num">2</div>
                 <div class="step-body">
                   <div class="step-title">토큰 입력 후 연결</div>
-                  <div class="step-desc">발급한 토큰을 아래에 붙여넣고 연결하세요.<br>데이터는 <strong>uping74/Daily-plan</strong> 저장소의<br><strong>data/planner.json</strong>에 저장됩니다.</div>
+                  <div class="step-desc">발급한 토큰을 아래에 붙여넣고 연결하세요.<br>데이터는 비공개 Gist 1개에 저장되어<br>모든 기기가 같은 Gist를 공유합니다.</div>
                 </div>
               </div>
             </div>
@@ -779,8 +579,8 @@ body{
               </div>
             </div>
             <div class="setup-note">
-              🔒 토큰은 이 기기에만 저장됩니다.<br>
-              다른 기기에서 동일한 토큰을 입력하면 자동 동기화됩니다.
+              토큰은 이 기기에만 저장됩니다.<br>
+              다른 기기에서 동일한 토큰을 입력하면 자동으로 같은 Gist를 찾아 연결합니다.
             </div>
           </div>
         </div>
@@ -851,8 +651,14 @@ body{
             <div class="section-ftr">⠿ 핸들을 드래그해서 순서를 변경할 수 있습니다.</div>
           </div>
           <div class="action-row">
-            <button class="action-btn blue" onclick="manualSync()">🔄 지금 동기화</button>
-            <button class="action-btn red" onclick="resetToken()">🔑 토큰 재설정</button>
+            <button class="action-btn blue" onclick="manualSync()">
+              <span class="sym"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 4v6h-6M1 20v-6h6"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg></span>
+              지금 동기화
+            </button>
+            <button class="action-btn red" onclick="resetToken()">
+              <span class="sym"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg></span>
+              토큰 재설정
+            </button>
           </div>
           <div style="height:8px;"></div>
         </div>
@@ -863,13 +669,16 @@ body{
     <!-- Mobile bottom tab bar -->
     <nav class="tab-bar" id="tab-bar">
       <button class="tab-item active" id="tab-planner" onclick="switchTab('planner',this)">
-        <div class="tab-icon">📋</div><span>플래너</span>
+        <span class="tab-icon sym"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 7h6M9 11h6M9 15h4"/></svg></span>
+        <span>플래너</span>
       </button>
       <button class="tab-item" id="tab-log" onclick="switchTab('log',this)">
-        <div class="tab-icon">📅</div><span>기록</span>
+        <span class="tab-icon sym"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18M8 2v4M16 2v4"/></svg></span>
+        <span>기록</span>
       </button>
       <button class="tab-item" id="tab-routine" onclick="switchTab('routine-edit',this)">
-        <div class="tab-icon">⚙️</div><span>루틴 설정</span>
+        <span class="tab-icon sym"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></span>
+        <span>루틴 설정</span>
       </button>
     </nav>
 
@@ -883,6 +692,7 @@ body{
 ══════════════════════════════════════════════════ */
 const DAYS_KO   = ['일요일','월요일','화요일','수요일','목요일','금요일','토요일'];
 const MONTHS_KO = ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'];
+const CHECK_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>';
 
 const $ = id => document.getElementById(id);
 function lsGet(k,d){ try{ const v=localStorage.getItem(k); return v!==null ? JSON.parse(v) : d; }catch{ return d; } }
@@ -895,6 +705,22 @@ function fmtDate(s){ const d=parseKey(s); return `${d.getFullYear()}년 ${MONTHS
 function fmtWd(s){ return DAYS_KO[parseKey(s).getDay()]; }
 function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 
+/* ---- UTF-8 safe Base64 (fixes Korean text corruption) ---- */
+function utf8ToB64(str){
+  // Encode a JS string (UTF-16) into UTF-8 bytes, then Base64
+  const bytes = new TextEncoder().encode(str);
+  let binary = '';
+  bytes.forEach(b => binary += String.fromCharCode(b));
+  return btoa(binary);
+}
+function b64ToUtf8(b64){
+  // Decode Base64 into bytes, then UTF-8 decode into a JS string
+  const binary = atob(b64.replace(/\n/g,''));
+  const bytes = new Uint8Array(binary.length);
+  for(let i=0;i<binary.length;i++) bytes[i] = binary.charCodeAt(i);
+  return new TextDecoder('utf-8').decode(bytes);
+}
+
 /* ══════════════════════════════════════════════════
    2. DATA MODEL
 ══════════════════════════════════════════════════ */
@@ -902,7 +728,7 @@ let routines = [];
 let nextRid  = 10;
 let dayMap   = {};
 
-function getAllData(){ return { routines, nextRid, days: dayMap, v: 3 }; }
+function getAllData(){ return { routines, nextRid, days: dayMap, v: 4 }; }
 function applyData(d){
   if(!d) return;
   routines = d.routines || [];
@@ -915,20 +741,22 @@ function saveDayData(k,v){ dayMap[k]=v; cacheLocal(); scheduleSync(); }
 function saveRoutines(){ cacheLocal(); scheduleSync(); }
 
 /* ══════════════════════════════════════════════════
-   3. GITHUB CONTENTS API SYNC
+   3. GITHUB GIST SYNC
+   A single private Gist holds the JSON data file.
+   Works reliably across phone / tablet / desktop:
+   - On load: always fetch latest from Gist
+   - On save: PATCH the gist (last-write-wins, but
+     reads-before-write keep this rare in single-user use)
 ══════════════════════════════════════════════════ */
-const GH_OWNER = 'uping74';
-const GH_REPO  = 'Daily-plan';
-const GH_PATH  = 'data/planner.json';
-const GH_API   = `https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/${GH_PATH}`;
+const GIST_FILENAME = 'daily-planner-data.json';
+const GIST_DESC     = 'Daily Planner data (do not delete)';
 
 let ghToken   = lsGet('dp_token','');
-let fileSha   = lsGet('dp_sha','');
+let gistId    = lsGet('dp_gist_id','');
 let syncTmr   = null;
 let isSyncing = false;
 
 function setSyncUI(state, label=''){
-  // Update all sync dot instances
   ['sb-sync-dot','sb2-sync-dot','mn-sync-dot'].forEach(id=>{
     const el=$(id); if(el) el.className='sync-dot '+state;
   });
@@ -940,19 +768,34 @@ function showSyncBar(msg){ $('el-sync-msg').textContent=msg; $('el-sync-bar').cl
 function hideSyncBar(){ $('el-sync-bar').classList.add('hidden'); }
 
 function ghHeaders(){
-  return { 'Authorization':`token ${ghToken}`, 'Accept':'application/vnd.github.v3+json', 'Content-Type':'application/json' };
+  return { 'Authorization':`token ${ghToken}`, 'Accept':'application/vnd.github+json' };
+}
+
+// Find an existing gist that holds our data file (search user's gists)
+async function findExistingGist(){
+  const r = await fetch('https://api.github.com/gists?per_page=100', { headers: ghHeaders() });
+  if(!r.ok) throw new Error(`HTTP ${r.status}`);
+  const gists = await r.json();
+  const found = gists.find(g => g.files && g.files[GIST_FILENAME]);
+  return found ? found.id : null;
 }
 
 async function ghLoad(){
-  if(!ghToken) return null;
+  if(!ghToken || !gistId) return null;
   setSyncUI('syncing','동기화 중…');
   try{
-    const r = await fetch(GH_API+'?t='+Date.now(), { headers: ghHeaders() });
-    if(r.status===404){ setSyncUI('ok','동기화됨'); hideSyncBar(); return {}; }
+    const r = await fetch(`https://api.github.com/gists/${gistId}?t=${Date.now()}`, { headers: ghHeaders() });
     if(!r.ok) throw new Error(`HTTP ${r.status}`);
     const j = await r.json();
-    fileSha = j.sha; lsSet('dp_sha', fileSha);
-    const content = JSON.parse(atob(j.content.replace(/\n/g,'')));
+    const file = j.files[GIST_FILENAME];
+    if(!file) return {};
+    let raw = file.content;
+    // Gist API truncates very large files; fetch raw_url if so
+    if(file.truncated && file.raw_url){
+      const rawR = await fetch(file.raw_url);
+      raw = await rawR.text();
+    }
+    const content = JSON.parse(raw);
     setSyncUI('ok','동기화됨'); hideSyncBar();
     return content;
   }catch(e){
@@ -967,26 +810,36 @@ async function ghSave(data){
   isSyncing = true;
   setSyncUI('syncing','저장 중…');
   try{
-    const body = {
-      message: `planner: update ${todayKey()}`,
-      content: btoa(unescape(encodeURIComponent(JSON.stringify(data,null,2)))),
-      ...(fileSha ? { sha: fileSha } : {})
-    };
-    const r = await fetch(GH_API, { method:'PUT', headers: ghHeaders(), body: JSON.stringify(body) });
-    if(!r.ok){
-      const err = await r.json().catch(()=>({}));
-      if(r.status===409 || (err.message||'').includes('sha')){
-        fileSha=''; lsSet('dp_sha','');
-        isSyncing = false;
-        const fresh = await ghLoad();
-        if(fresh){ applyData(fresh); cacheLocal(); }
-        await ghSave(getAllData());
-        return;
+    const jsonStr = JSON.stringify(data, null, 2);
+    const body = { files: { [GIST_FILENAME]: { content: jsonStr } } };
+
+    let r;
+    if(gistId){
+      r = await fetch(`https://api.github.com/gists/${gistId}`, {
+        method:'PATCH', headers: {...ghHeaders(),'Content-Type':'application/json'}, body: JSON.stringify(body)
+      });
+      if(r.status===404){
+        // gist might have been deleted — try to find or create a new one
+        gistId='';
       }
-      throw new Error(`HTTP ${r.status}: ${err.message||''}`);
     }
+    if(!gistId){
+      const found = await findExistingGist();
+      if(found){
+        gistId = found; lsSet('dp_gist_id', gistId);
+        r = await fetch(`https://api.github.com/gists/${gistId}`, {
+          method:'PATCH', headers: {...ghHeaders(),'Content-Type':'application/json'}, body: JSON.stringify(body)
+        });
+      } else {
+        r = await fetch('https://api.github.com/gists', {
+          method:'POST', headers: {...ghHeaders(),'Content-Type':'application/json'},
+          body: JSON.stringify({ description: GIST_DESC, public: false, ...body })
+        });
+      }
+    }
+    if(!r.ok) throw new Error(`HTTP ${r.status}`);
     const j = await r.json();
-    fileSha = j.content?.sha || fileSha; lsSet('dp_sha', fileSha);
+    if(!gistId){ gistId = j.id; lsSet('dp_gist_id', gistId); }
     setSyncUI('ok','동기화됨'); hideSyncBar();
   }catch(e){
     setSyncUI('err','동기화 실패');
@@ -996,8 +849,12 @@ async function ghSave(data){
   }
 }
 
-function scheduleSync(){ clearTimeout(syncTmr); syncTmr = setTimeout(()=>ghSave(getAllData()),2000); }
-async function syncNow(){ clearTimeout(syncTmr); const d=await ghLoad(); if(d){ applyData(d); cacheLocal(); renderAll(); if(activeTab==='log') renderLog(); } }
+function scheduleSync(){ clearTimeout(syncTmr); syncTmr = setTimeout(()=>ghSave(getAllData()),1500); }
+async function syncNow(){
+  clearTimeout(syncTmr);
+  const d = await ghLoad();
+  if(d && Object.keys(d).length>0){ applyData(d); cacheLocal(); renderAll(); if(activeTab==='log') renderLog(); }
+}
 async function manualSync(){ await syncNow(); }
 
 /* ══════════════════════════════════════════════════
@@ -1006,24 +863,33 @@ async function manualSync(){ await syncNow(); }
 async function saveToken(){
   const t = $('el-token-input').value.trim();
   if(!t){ alert('토큰을 입력하세요.'); return; }
-  ghToken=t; lsSet('dp_token',t); fileSha=''; lsSet('dp_sha','');
+  ghToken=t; lsSet('dp_token',t);
   setSyncUI('syncing','연결 중…');
   try{
-    const r = await fetch(`https://api.github.com/repos/${GH_OWNER}/${GH_REPO}`, { headers: ghHeaders() });
-    if(!r.ok) throw new Error(`저장소 접근 실패 (HTTP ${r.status})`);
-    const data = await ghLoad();
-    if(data && Object.keys(data).length>0){ applyData(data); cacheLocal(); }
-    else { await ghSave(getAllData()); }
+    // Verify token validity
+    const me = await fetch('https://api.github.com/user', { headers: ghHeaders() });
+    if(!me.ok) throw new Error(`토큰 확인 실패 (HTTP ${me.status})`);
+
+    // Find existing gist with our data file
+    const found = await findExistingGist();
+    if(found){
+      gistId = found; lsSet('dp_gist_id', gistId);
+      const data = await ghLoad();
+      if(data && Object.keys(data).length>0){ applyData(data); cacheLocal(); }
+    } else {
+      gistId = ''; lsSet('dp_gist_id','');
+      await ghSave(getAllData()); // creates a new gist
+    }
     launchApp();
   }catch(e){
-    ghToken=''; lsSet('dp_token','');
+    ghToken=''; gistId=''; lsSet('dp_token',''); lsSet('dp_gist_id','');
     setSyncUI('err','');
-    alert('연결 실패: '+e.message);
+    alert('연결 실패: '+e.message+'\n\n토큰의 gist 권한(scope)을 확인하세요.');
   }
 }
 function resetToken(){
   if(!confirm('토큰을 초기화하고 설정 화면으로 이동할까요?')) return;
-  ghToken=''; fileSha=''; lsSet('dp_token',''); lsSet('dp_sha','');
+  ghToken=''; gistId=''; lsSet('dp_token',''); lsSet('dp_gist_id','');
   setSyncUI('off','오프라인');
   showView('setup');
 }
@@ -1038,31 +904,23 @@ function showView(name){
     $('view-'+v).style.display = v===name ? '' : 'none';
   });
 }
-
 function launchApp(){
   activeTab='planner';
   showView('planner');
-  // Reset all nav highlights
   document.querySelectorAll('.sidebar-nav-item').forEach(b=>b.classList.remove('active'));
   document.querySelectorAll('.tab-item').forEach(b=>b.classList.remove('active'));
   $('snav-planner').classList.add('active');
   $('tab-planner').classList.add('active');
   renderAll();
 }
-
 function switchTab(tab, btn){
   activeTab = tab;
-  // Update sidebar nav
   document.querySelectorAll('.sidebar-nav-item').forEach(b=>b.classList.remove('active'));
-  // Update tab bar
   document.querySelectorAll('.tab-item').forEach(b=>b.classList.remove('active'));
-
-  // Activate correct buttons in both navs
   const snavMap = {'planner':'snav-planner','log':'snav-log','routine-edit':'snav-routine'};
   const tnavMap = {'planner':'tab-planner','log':'tab-log','routine-edit':'tab-routine'};
   const sEl = $(snavMap[tab]); if(sEl) sEl.classList.add('active');
   const tEl = $(tnavMap[tab]); if(tEl) tEl.classList.add('active');
-
   showView(tab);
   $('el-scroll').scrollTop = 0;
   if(tab==='log') renderLog();
@@ -1077,10 +935,8 @@ let currentDay = todayKey();
 function renderHeader(){
   const dateStr = fmtDate(currentDay);
   const subStr  = fmtWd(currentDay) + (currentDay===todayKey() ? ' · 오늘' : '');
-  // Sidebar
   if($('sb-date-heading')) $('sb-date-heading').textContent = dateStr;
   if($('sb-date-sub')) $('sb-date-sub').textContent = subStr;
-  // Mobile nav
   if($('mn-date-heading')) $('mn-date-heading').textContent = dateStr;
   if($('mn-date-sub')) $('mn-date-sub').textContent = subStr;
 }
@@ -1107,7 +963,6 @@ function renderPlanner(){
   $('el-prog-pct').textContent = `${pct}%`;
   $('el-prog-fill').style.width = pct+'%';
 
-  // Routines
   const rl = $('el-routine-list');
   rl.innerHTML = routines.length ? '' : '<div class="empty-row">루틴 설정 탭에서 항목을 추가하세요</div>';
   routines.forEach(r=>{
@@ -1116,7 +971,7 @@ function renderPlanner(){
     row.className = 'row';
     row.innerHTML = `
       <div class="row-check ${d2?'done-blue':''}"
-           ontouchend="tapR(event,${r.id})" onclick="toggleR(${r.id})">${d2?'✓':''}</div>
+           ontouchend="tapR(event,${r.id})" onclick="toggleR(${r.id})">${CHECK_SVG}</div>
       <div class="row-body" ontouchend="tapR(event,${r.id})" onclick="toggleR(${r.id})">
         <div class="row-title ${d2?'done':''}">${esc(r.name)}</div>
         ${r.time?`<div class="row-sub">${r.time}</div>`:''}
@@ -1124,7 +979,6 @@ function renderPlanner(){
     rl.appendChild(row);
   });
 
-  // Tasks
   const tl = $('el-task-list');
   tl.innerHTML = tasks.length ? '' : '<div class="empty-row">아직 오늘 할 일이 없습니다</div>';
   tasks.forEach(t=>{
@@ -1132,12 +986,14 @@ function renderPlanner(){
     row.className = 'row';
     row.innerHTML = `
       <div class="row-check ${t.done?'done-green':''}"
-           ontouchend="tapT(event,'${t.id}')" onclick="toggleT('${t.id}')">${t.done?'✓':''}</div>
+           ontouchend="tapT(event,'${t.id}')" onclick="toggleT('${t.id}')">${CHECK_SVG}</div>
       <div class="row-body" ontouchend="tapT(event,'${t.id}')" onclick="toggleT('${t.id}')">
         <div class="row-title ${t.done?'done':''}">${esc(t.name)}</div>
         ${t.time?`<div class="row-sub">${t.time}</div>`:''}
       </div>
-      <button class="btn-del" onclick="delTask('${t.id}')" aria-label="삭제">×</button>`;
+      <button class="btn-del" onclick="delTask('${t.id}')" aria-label="삭제">
+        <span class="sym"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6L6 18M6 6l12 12"/></svg></span>
+      </button>`;
     tl.appendChild(row);
   });
 }
@@ -1168,13 +1024,17 @@ function renderRoutineEdit(){
     const row=document.createElement('div');
     row.className='rrow'; row.dataset.index=idx;
     row.innerHTML=`
-      <span class="drag-grip" draggable="true" data-index="${idx}">⠿</span>
+      <span class="drag-grip" draggable="true" data-index="${idx}">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="9" cy="6" r="1"/><circle cx="9" cy="12" r="1"/><circle cx="9" cy="18" r="1"/><circle cx="15" cy="6" r="1"/><circle cx="15" cy="12" r="1"/><circle cx="15" cy="18" r="1"/></svg>
+      </span>
       <div class="order-num">${idx+1}</div>
       <div class="row-body" style="pointer-events:none;">
         <div class="row-title">${esc(r.name)}</div>
         ${r.time?`<div class="row-sub">${r.time}</div>`:''}
       </div>
-      <button class="btn-del" onclick="delRoutine(${r.id})">×</button>`;
+      <button class="btn-del" onclick="delRoutine(${r.id})">
+        <span class="sym"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6L6 18M6 6l12 12"/></svg></span>
+      </button>`;
     list.appendChild(row);
   });
   list.querySelectorAll('.drag-grip').forEach(h=>{
@@ -1191,12 +1051,12 @@ function renderRoutineEdit(){
   });
 }
 
-function dStart(e){ dragIdx=parseInt(e.target.dataset.index); const r=e.target.closest('.rrow'); if(r) setTimeout(()=>r.classList.add('is-dragging'),0); e.dataTransfer.effectAllowed='move'; e.dataTransfer.setData('text/plain',dragIdx); }
+function dStart(e){ dragIdx=parseInt(e.target.closest('.drag-grip').dataset.index); const r=e.target.closest('.rrow'); if(r) setTimeout(()=>r.classList.add('is-dragging'),0); e.dataTransfer.effectAllowed='move'; e.dataTransfer.setData('text/plain',dragIdx); }
 function dEnd(){ document.querySelectorAll('.rrow').forEach(r=>r.classList.remove('is-dragging','drag-over')); dragIdx=null; }
 function dOver(e){ e.preventDefault(); const i=parseInt(e.currentTarget.dataset.index); if(i!==dragIdx){ document.querySelectorAll('.rrow').forEach(r=>r.classList.remove('drag-over')); e.currentTarget.classList.add('drag-over'); } }
 function dLeave(e){ e.currentTarget.classList.remove('drag-over'); }
 function dDrop(e){ e.preventDefault(); const ti=parseInt(e.currentTarget.dataset.index); if(dragIdx===null||dragIdx===ti) return; const[m]=routines.splice(dragIdx,1); routines.splice(ti,0,m); saveRoutines(); renderRoutineEdit(); renderPlanner(); }
-function tStart(e){ touchIdx=parseInt(e.target.dataset.index); }
+function tStart(e){ touchIdx=parseInt(e.target.closest('.drag-grip').dataset.index); }
 function tMove(e){ if(touchIdx===null) return; e.preventDefault(); const y=e.touches[0].clientY; document.querySelectorAll('.rrow').forEach((r,i)=>{ const rc=r.getBoundingClientRect(); r.classList.toggle('drag-over',y>rc.top&&y<rc.bottom&&i!==touchIdx); }); }
 function tEnd(e){ if(touchIdx===null) return; const y=e.changedTouches[0].clientY; let ti=touchIdx; document.querySelectorAll('.rrow').forEach((r,i)=>{ const rc=r.getBoundingClientRect(); if(y>rc.top&&y<rc.bottom) ti=i; r.classList.remove('drag-over'); }); if(ti!==touchIdx){ const[m]=routines.splice(touchIdx,1); routines.splice(ti,0,m); saveRoutines(); renderRoutineEdit(); renderPlanner(); } touchIdx=null; }
 
@@ -1229,18 +1089,21 @@ function renderLog(){
     const tot=routines.length+tasks.length, dn=rd.length+td.length;
     const pct=tot?Math.round(dn/tot*100):0;
     const bcls=pct>=80?'high':pct>=50?'mid':'low';
+    const dotBlue  = '<span class="sym" style="color:var(--blue)"><svg viewBox="0 0 24 24" width="10" height="10" fill="currentColor"><circle cx="12" cy="12" r="10"/></svg></span>';
+    const dotGreen = '<span class="sym" style="color:var(--green)"><svg viewBox="0 0 24 24" width="10" height="10" fill="currentColor"><circle cx="12" cy="12" r="10"/></svg></span>';
+    const dotGray  = '<span class="sym" style="color:var(--gray-3)"><svg viewBox="0 0 24 24" width="10" height="10" fill="currentColor"><circle cx="12" cy="12" r="10"/></svg></span>';
     let html=`<div class="log-card">
       <div class="log-card-hdr">
         <div class="log-date">${fmtDate(key)}${i===0?'<span class="today-badge">오늘</span>':''}</div>
         <div class="log-badge ${bcls}">${pct}%</div>
       </div>`;
-    rd.forEach(r=>{html+=`<div class="log-row"><div class="log-icon">🔵</div><div class="log-name">${esc(r.name)}</div></div>`;});
-    td.forEach(t=>{html+=`<div class="log-row"><div class="log-icon">✅</div><div class="log-name">${esc(t.name)}</div></div>`;});
-    rs.forEach(r=>{html+=`<div class="log-row"><div class="log-icon">⚪</div><div class="log-name skipped">${esc(r.name)}</div></div>`;});
-    ts.forEach(t=>{html+=`<div class="log-row"><div class="log-icon">⚪</div><div class="log-name skipped">${esc(t.name)}</div></div>`;});
+    rd.forEach(r=>{html+=`<div class="log-row"><div class="log-icon">${dotBlue}</div><div class="log-name">${esc(r.name)}</div></div>`;});
+    td.forEach(t=>{html+=`<div class="log-row"><div class="log-icon">${dotGreen}</div><div class="log-name">${esc(t.name)}</div></div>`;});
+    rs.forEach(r=>{html+=`<div class="log-row"><div class="log-icon">${dotGray}</div><div class="log-name skipped">${esc(r.name)}</div></div>`;});
+    ts.forEach(t=>{html+=`<div class="log-row"><div class="log-icon">${dotGray}</div><div class="log-name skipped">${esc(t.name)}</div></div>`;});
     html+='</div>'; cont.innerHTML+=html;
   }
-  if(!any) cont.innerHTML='<div style="padding:40px 16px;text-align:center;color:var(--label-3);font-size:15px;">아직 기록이 없습니다</div>';
+  if(!any) cont.innerHTML='<div style="padding:40px 16px;text-align:center;color:var(--label-3);font-size:14px;">아직 기록이 없습니다</div>';
 }
 
 /* ══════════════════════════════════════════════════
@@ -1258,11 +1121,16 @@ $('el-scroll').addEventListener('touchend', e=>{
 },{passive:true});
 
 /* ══════════════════════════════════════════════════
-   11. VISIBILITY REFRESH
+   11. VISIBILITY REFRESH — always pull latest on focus
 ══════════════════════════════════════════════════ */
 document.addEventListener('visibilitychange', async()=>{
-  if(document.visibilityState==='visible'&&ghToken){
-    const d=await ghLoad(); if(d){ applyData(d); cacheLocal(); renderAll(); if(activeTab==='log') renderLog(); }
+  if(document.visibilityState==='visible'&&ghToken&&gistId){
+    const d=await ghLoad(); if(d && Object.keys(d).length>0){ applyData(d); cacheLocal(); renderAll(); if(activeTab==='log') renderLog(); }
+  }
+});
+window.addEventListener('focus', async()=>{
+  if(ghToken&&gistId){
+    const d=await ghLoad(); if(d && Object.keys(d).length>0){ applyData(d); cacheLocal(); renderAll(); if(activeTab==='log') renderLog(); }
   }
 });
 
@@ -1293,7 +1161,22 @@ if('serviceWorker' in navigator){
       {id:3,name:'업무 종료 전 내일 할 일 메모',time:'18:00'},
     ]; nextRid=10;
   }
-  if(!ghToken){
+  if(!ghToken || !gistId){
+    if(ghToken && !gistId){
+      // Token exists but no gist linked yet — try to find/create one
+      setSyncUI('syncing','연결 중…');
+      try{
+        const found = await findExistingGist();
+        if(found){ gistId=found; lsSet('dp_gist_id',gistId); }
+        else { await ghSave(getAllData()); }
+        launchApp();
+        const remote = await ghLoad();
+        if(remote && Object.keys(remote).length>0){ applyData(remote); cacheLocal(); renderAll(); }
+        return;
+      }catch(e){
+        showView('setup'); setSyncUI('off','오프라인'); return;
+      }
+    }
     showView('setup'); setSyncUI('off','오프라인');
   } else {
     launchApp();
