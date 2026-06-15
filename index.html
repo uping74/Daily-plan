@@ -740,6 +740,12 @@ function getDayData(k){ if(!dayMap[k]) dayMap[k]={checks:{},tasks:[]}; return da
 function saveDayData(k,v){ dayMap[k]=v; cacheLocal(); scheduleSync(); }
 function saveRoutines(){ cacheLocal(); scheduleSync(); }
 
+// True while a local change hasn't been confirmed-saved to Gist yet.
+// While true, incoming remote data must NOT overwrite local state,
+// otherwise a delayed background refresh can "revive" something
+// the user just deleted/changed.
+let pendingSync = false;
+
 /* ══════════════════════════════════════════════════
    3. GITHUB GIST SYNC
    A single private Gist holds the JSON data file.
@@ -806,7 +812,13 @@ async function ghLoad(){
 }
 
 async function ghSave(data){
-  if(!ghToken || isSyncing) return;
+  if(!ghToken) return;
+  if(isSyncing){
+    // A save is already in flight — make sure we re-run once it's done
+    // so the latest local state still gets pushed.
+    syncTmr = setTimeout(()=>ghSave(getAllData()), 800);
+    return;
+  }
   isSyncing = true;
   setSyncUI('syncing','저장 중…');
   try{
@@ -840,18 +852,29 @@ async function ghSave(data){
     if(!r.ok) throw new Error(`HTTP ${r.status}`);
     const j = await r.json();
     if(!gistId){ gistId = j.id; lsSet('dp_gist_id', gistId); }
+    // Only clear pendingSync if no newer local change happened
+    // while this request was in flight (compare snapshots).
+    if(JSON.stringify(getAllData()) === jsonStr) pendingSync = false;
     setSyncUI('ok','동기화됨'); hideSyncBar();
   }catch(e){
     setSyncUI('err','동기화 실패');
     showSyncBar('저장 실패: '+e.message);
+    // Keep pendingSync true so a refresh won't clobber unsaved changes;
+    // retry shortly.
+    syncTmr = setTimeout(()=>ghSave(getAllData()), 5000);
   }finally{
     isSyncing = false;
   }
 }
 
-function scheduleSync(){ clearTimeout(syncTmr); syncTmr = setTimeout(()=>ghSave(getAllData()),1500); }
+function scheduleSync(){
+  pendingSync = true;
+  clearTimeout(syncTmr);
+  syncTmr = setTimeout(()=>ghSave(getAllData()), 800);
+}
 async function syncNow(){
   clearTimeout(syncTmr);
+  if(pendingSync){ await ghSave(getAllData()); return; }
   const d = await ghLoad();
   if(d && Object.keys(d).length>0){ applyData(d); cacheLocal(); renderAll(); if(activeTab==='log') renderLog(); }
 }
@@ -1122,17 +1145,29 @@ $('el-scroll').addEventListener('touchend', e=>{
 
 /* ══════════════════════════════════════════════════
    11. VISIBILITY REFRESH — always pull latest on focus
+   (unless a local change hasn't been saved yet — in that
+   case, push it first so it isn't overwritten/reverted)
 ══════════════════════════════════════════════════ */
-document.addEventListener('visibilitychange', async()=>{
-  if(document.visibilityState==='visible'&&ghToken&&gistId){
-    const d=await ghLoad(); if(d && Object.keys(d).length>0){ applyData(d); cacheLocal(); renderAll(); if(activeTab==='log') renderLog(); }
+async function refreshFromRemote(){
+  if(!ghToken || !gistId) return;
+  if(pendingSync){
+    // Don't let a stale remote copy revert an unsaved local change.
+    // Push our pending change first, then it's safe to refresh later.
+    clearTimeout(syncTmr);
+    await ghSave(getAllData());
+    return;
   }
-});
-window.addEventListener('focus', async()=>{
-  if(ghToken&&gistId){
-    const d=await ghLoad(); if(d && Object.keys(d).length>0){ applyData(d); cacheLocal(); renderAll(); if(activeTab==='log') renderLog(); }
+  const d = await ghLoad();
+  if(d && Object.keys(d).length>0){
+    applyData(d); cacheLocal(); renderAll();
+    if(activeTab==='log') renderLog();
+    if(activeTab==='routine-edit') renderRoutineEdit();
   }
+}
+document.addEventListener('visibilitychange', ()=>{
+  if(document.visibilityState==='visible') refreshFromRemote();
 });
+window.addEventListener('focus', refreshFromRemote);
 
 /* ══════════════════════════════════════════════════
    12. KEYBOARD
