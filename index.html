@@ -1206,7 +1206,7 @@ if('serviceWorker' in navigator){
         else { await ghSave(getAllData()); }
         launchApp();
         const remote = await ghLoad();
-        if(remote && Object.keys(remote).length>0){ applyData(remote); cacheLocal(); renderAll(); }
+        if(remote && Object.keys(remote).length>0 && !pendingSync){ applyData(remote); cacheLocal(); renderAll(); if(activeTab==='routine-edit') renderRoutineEdit(); }
         return;
       }catch(e){
         showView('setup'); setSyncUI('off','오프라인'); return;
@@ -1216,7 +1216,7 @@ if('serviceWorker' in navigator){
   } else {
     launchApp();
     const remote = await ghLoad();
-    if(remote && Object.keys(remote).length>0){ applyData(remote); cacheLocal(); renderAll(); }
+    if(remote && Object.keys(remote).length>0 && !pendingSync){ applyData(remote); cacheLocal(); renderAll(); if(activeTab==='routine-edit') renderRoutineEdit(); }
   }
 })();
 </script>
